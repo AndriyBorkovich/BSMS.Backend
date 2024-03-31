@@ -1,6 +1,6 @@
 ﻿namespace BSMS.Infrastructure.Seed;
 
-public class BusStationSeeder
+public static class BusStationSeeder
 {
     
 }

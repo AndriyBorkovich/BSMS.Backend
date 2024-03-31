@@ -15,7 +15,7 @@ public static class PersistenceRegistration
         {
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"));
         });
-
+        
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IBusRepository, BusRepository>();
 

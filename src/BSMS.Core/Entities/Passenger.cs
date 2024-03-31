@@ -8,8 +8,9 @@ public class Passenger
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public int? BusId { get; set; }
-    
+
     public Bus? Bus { get; set; }
     public List<BusReview> BusReviews { get; set; }
-    public List<Ticket> Tickets { get; set; }
+
+public List<Ticket> Tickets { get; set; }
 }

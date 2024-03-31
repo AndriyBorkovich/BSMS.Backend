@@ -1,9 +1,11 @@
-﻿namespace BSMS.Core.Entities;
+﻿using BSMS.Core.Enums;
+
+namespace BSMS.Core.Entities;
 
 public class Trip
 {
     public int TripId { get; set; }
-    public string TripStatus { get; set; } = null!;
+    public TripStatus Status { get; set; }
     public int RouteId { get; set; }
     public DateTime DepartureTime { get; set; }
     public DateTime ArrivalTime { get; set; }

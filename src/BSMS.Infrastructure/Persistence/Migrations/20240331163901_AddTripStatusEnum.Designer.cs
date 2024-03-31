@@ -4,6 +4,7 @@ using BSMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BSMS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BusStationContext))]
-    partial class BusStationContextModelSnapshot : ModelSnapshot
+    [Migration("20240331163901_AddTripStatusEnum")]
+    partial class AddTripStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,7 +242,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                     b.Property<int?>("PreviousStopId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RouteId")
+                    b.Property<int?>("RouteId")
                         .HasColumnType("int");
 
                     b.HasKey("StopId");
@@ -395,9 +398,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasOne("BSMS.Core.Entities.Route", "Route")
                         .WithMany("Stops")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RouteId");
 
                     b.Navigation("PreviousStop");
 
