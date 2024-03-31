@@ -6,4 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Contracts\Services\" />
+      <Folder Include="Features\Bus\" />
+      <Folder Include="Features\Passenger\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BSMS.Core\BSMS.Core.csproj" />
+    </ItemGroup>
+
 </Project>
