@@ -5,7 +5,6 @@ namespace BSMS.Core.Entities;
 public class Ticket
 {
     public int TicketId { get; set; }
-    public int? PassengerId { get; set; }
     public int SeatId { get; set; }
     [Column(TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
@@ -15,6 +14,6 @@ public class Ticket
     
     public Stop EndStop { get; set; } = null!;
     public Stop StartStop { get; set; } = null!;
-    public Passenger? Passenger { get; set; }
     public Seat Seat { get; set; } = null!;
+    public TicketPayment Payment { get; set; } = null!;
 }

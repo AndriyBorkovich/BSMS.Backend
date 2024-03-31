@@ -11,6 +11,5 @@ public class Passenger
 
     public Bus? Bus { get; set; }
     public List<BusReview> BusReviews { get; set; }
-
-public List<Ticket> Tickets { get; set; }
+    public List<TicketPayment> Payments { get; set; }
 }
