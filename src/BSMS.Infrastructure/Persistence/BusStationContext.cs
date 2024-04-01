@@ -1,5 +1,6 @@
 ﻿using BSMS.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BSMS.Infrastructure.Persistence;
 
@@ -36,5 +37,15 @@ public class BusStationContext : DbContext
             .HasMany(s => s.TicketEndStops)
             .WithOne(t => t.EndStop)
             .OnDelete(DeleteBehavior.ClientSetNull);
+
+        // modelBuilder
+        //     .Entity<BusScheduleEntry>()
+        //     .Property(bs => bs.Day)
+        //     .HasConversion<string>();
+        //
+        // modelBuilder
+        //     .Entity<BusScheduleEntry>()
+        //     .Property(bs => bs.MoveDirection)
+        //     .HasConversion<string>();
     }
 }

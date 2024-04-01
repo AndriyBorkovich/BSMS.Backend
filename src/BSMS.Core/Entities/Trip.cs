@@ -1,15 +1,16 @@
 ﻿using BSMS.Core.Enums;
 
 namespace BSMS.Core.Entities;
-
+/// <summary>
+/// represent trip history (live) for specific bus on specific route
+/// </summary>
 public class Trip
 {
     public int TripId { get; set; }
     public TripStatus Status { get; set; }
-    public int RouteId { get; set; }
+    public int BusScheduleEntryId { get; set; }
     public DateTime DepartureTime { get; set; }
     public DateTime ArrivalTime { get; set; }
     
-    public Route Route { get; set; }
-    public List<Bus> Buses { get; set; }
+    public BusScheduleEntry BusScheduleEntry { get; set; }
 }

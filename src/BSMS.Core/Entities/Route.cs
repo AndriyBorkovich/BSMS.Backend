@@ -7,5 +7,5 @@ public class Route
     public string Destination { get; set; } = null!;
 
     public List<Stop> Stops { get; set; }
-    public List<Trip> Trips { get; set; }
+    public List<BusScheduleEntry> BusScheduleEntries { get; set; }
 }

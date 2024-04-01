@@ -11,9 +11,9 @@ public class Ticket
     public bool IsSold { get; set; }
     public int StartStopId { get; set; }
     public int EndStopId { get; set; }
-    
-    public Stop EndStop { get; set; } = null!;
+
     public Stop StartStop { get; set; } = null!;
+    public Stop EndStop { get; set; } = null!;
     public Seat Seat { get; set; } = null!;
     public TicketPayment Payment { get; set; } = null!;
 }

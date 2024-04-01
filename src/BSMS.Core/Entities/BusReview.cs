@@ -5,6 +5,7 @@ public class BusReview
     public int BusReviewId { get; set; }
     public int BusId { get; set; }
     public int PassengerId { get; set; }
+    
     public int? ComfortRating { get; set; }
     public int? PunctualityRating { get; set; }
     public int? PriceQualityRatioRating { get; set; }
