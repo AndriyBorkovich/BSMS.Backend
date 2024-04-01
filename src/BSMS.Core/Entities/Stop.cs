@@ -1,9 +1,13 @@
-﻿namespace BSMS.Core.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BSMS.Core.Entities;
 
 public class Stop
 {
     public int StopId { get; set; }
     public int RouteId { get; set; }
+    [StringLength(100)]
+    public string Name { get; set; }
     public int? PreviousStopId { get; set; }
     
     public Stop? PreviousStop { get; set; }
