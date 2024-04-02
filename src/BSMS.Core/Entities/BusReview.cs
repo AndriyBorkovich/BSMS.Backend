@@ -1,4 +1,6 @@
-﻿namespace BSMS.Core.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BSMS.Core.Entities;
 
 public class BusReview
 {
@@ -11,6 +13,7 @@ public class BusReview
     public int? PriceQualityRatioRating { get; set; }
     public int? InternetConnectionRating { get; set; }
     public int? SanitaryConditionsRating { get; set; }
+    [StringLength(200)]
     public string? Comments { get; set; }
     public DateTime ReviewDate { get; set; }
     

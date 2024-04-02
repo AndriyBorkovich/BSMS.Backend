@@ -1,11 +1,15 @@
-﻿namespace BSMS.Core.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BSMS.Core.Entities;
 
 public class Bus
 {
     public int BusId { get; set; }
     
     public int Capacity { get; set; }
+    [StringLength(50)]
     public string Brand { get; set; } = null!;
+    [StringLength(20)]
     public string Number { get; set; } = null!;
 
     /// <summary>

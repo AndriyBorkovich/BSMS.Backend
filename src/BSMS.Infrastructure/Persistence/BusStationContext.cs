@@ -17,6 +17,7 @@ public class BusStationContext : DbContext
 
     public DbSet<Bus> Buses { get; set; }
     public DbSet<BusReview> BusReviews { get; set; }
+    public DbSet<BusScheduleEntry> BusScheduleEntries { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Driver> Drivers { get; set; }
     public DbSet<Passenger> Passengers { get; set; }
@@ -24,6 +25,7 @@ public class BusStationContext : DbContext
     public DbSet<Seat> Seats { get; set; }
     public DbSet<Stop> Stops { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<TicketPayment> TicketPayments { get; set; }
     public DbSet<Trip> Trips { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,11 +43,13 @@ public class BusStationContext : DbContext
         modelBuilder
             .Entity<BusScheduleEntry>()
             .Property(bs => bs.Day)
-            .HasConversion<string>();
+            .HasConversion<string>()
+            .HasMaxLength(20);
         
         modelBuilder
             .Entity<BusScheduleEntry>()
             .Property(bs => bs.MoveDirection)
-            .HasConversion<string>();
+            .HasConversion<string>()
+            .HasMaxLength(20);
     }
 }
