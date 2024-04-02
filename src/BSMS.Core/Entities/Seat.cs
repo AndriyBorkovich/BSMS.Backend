@@ -8,5 +8,8 @@ public class Seat
     public bool IsFree { get; set; }
 
     public Bus Bus { get; set; }
-    public Ticket? Ticket { get; set; }
+    /// <summary>
+    /// represents fact that seat can have many tickets because of many bus trips
+    /// </summary>
+    public List<Ticket> Tickets { get; set; }
 }
