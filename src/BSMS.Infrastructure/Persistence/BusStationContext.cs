@@ -38,14 +38,14 @@ public class BusStationContext : DbContext
             .WithOne(t => t.EndStop)
             .OnDelete(DeleteBehavior.ClientSetNull);
 
-        // modelBuilder
-        //     .Entity<BusScheduleEntry>()
-        //     .Property(bs => bs.Day)
-        //     .HasConversion<string>();
-        //
-        // modelBuilder
-        //     .Entity<BusScheduleEntry>()
-        //     .Property(bs => bs.MoveDirection)
-        //     .HasConversion<string>();
+        modelBuilder
+            .Entity<BusScheduleEntry>()
+            .Property(bs => bs.Day)
+            .HasConversion<string>();
+        
+        modelBuilder
+            .Entity<BusScheduleEntry>()
+            .Property(bs => bs.MoveDirection)
+            .HasConversion<string>();
     }
 }

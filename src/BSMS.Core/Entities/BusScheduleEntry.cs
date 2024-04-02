@@ -17,5 +17,5 @@ public class BusScheduleEntry
     
     public Bus Bus { get; set; }
     public Route Route { get; set; }
-    public Trip? Trip { get; set; }
+    public List<Trip> Trips { get; set; }
 }
