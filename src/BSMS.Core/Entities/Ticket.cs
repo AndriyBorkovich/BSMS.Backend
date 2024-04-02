@@ -16,5 +16,5 @@ public class Ticket
     public Stop StartStop { get; set; } = null!;
     public Stop EndStop { get; set; } = null!;
     public Seat Seat { get; set; } = null!;
-    public TicketPayment Payment { get; set; } = null!;
+    public TicketPayment? Payment { get; set; } = null!;
 }

@@ -13,4 +13,5 @@ public class Trip
     public DateTime ArrivalTime { get; set; }
     
     public BusScheduleEntry BusScheduleEntry { get; set; }
+    public List<TicketPayment> BoughtTickets { get; set; }
 }
