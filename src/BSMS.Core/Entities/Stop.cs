@@ -6,6 +6,7 @@ public class Stop
 {
     public int StopId { get; set; }
     public int RouteId { get; set; }
+    
     [StringLength(50)]
     public string Name { get; set; }
     public int? PreviousStopId { get; set; }

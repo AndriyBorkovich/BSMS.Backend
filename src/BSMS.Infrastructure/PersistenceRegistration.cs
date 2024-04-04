@@ -1,4 +1,5 @@
-﻿using BSMS.Application.Contracts.Persistence;
+﻿using BSMS.Application.Contracts;
+using BSMS.Application.Contracts.Persistence;
 using BSMS.Infrastructure.Persistence;
 using BSMS.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ public static class PersistenceRegistration
         
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IBusRepository, BusRepository>();
+        services.AddScoped<IRouteRepository, RouteRepository>();
 
         return services;
     }

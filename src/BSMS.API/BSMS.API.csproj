@@ -5,15 +5,20 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>e0ed5fa0-3405-4885-9ad6-18c5f576a298</UserSecretsId>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Mapster" Version="7.4.1-pre01" />
+        <PackageReference Include="Mapster.DependencyInjection" Version="1.0.2-pre01" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
