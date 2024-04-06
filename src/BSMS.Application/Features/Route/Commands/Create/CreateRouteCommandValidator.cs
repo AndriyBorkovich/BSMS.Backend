@@ -8,13 +8,11 @@ public class CreateRouteCommandValidator : AbstractValidator<CreateRouteCommand>
     {
         RuleFor(c => c.Origin)
             .NotNull()
-            .NotEmpty()
-            .WithMessage("Origin cannot be empty");
+            .NotEmpty();
 
         RuleFor(c => c.Destination)
             .NotNull()
-            .NotEmpty()
-            .WithMessage("Destination cannot be empty");
+            .NotEmpty();
         
         RuleFor(command => command)
             .Must(HaveValidPath)

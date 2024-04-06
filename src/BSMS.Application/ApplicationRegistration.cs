@@ -1,4 +1,8 @@
 ﻿using System.Reflection;
+using BSMS.Application.Features.Bus.Commands.Create;
+using BSMS.Application.Features.Company.Commands.Create;
+using BSMS.Application.Features.Driver.Commands.Create;
+using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Route.Commands.Create;
 using BSMS.Application.Helpers;
 using FluentValidation;
@@ -20,7 +24,18 @@ public static class ApplicationRegistration
         services.AddScoped<IMapper, ServiceMapper>();
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-        services.AddScoped<IValidator<CreateRouteCommand>, CreateRouteCommandValidator>();
+        
+        AddValidators(services);
+
         return services;
+    }
+
+    private static void AddValidators(IServiceCollection services)
+    {
+        services.AddScoped<IValidator<CreateRouteCommand>, CreateRouteCommandValidator>();
+        services.AddScoped<IValidator<CreateBusCommand>, CreateBusCommandValidator>();
+        services.AddScoped<IValidator<CreatePassengerCommand>, CreatePassengerCommandValidator>();
+        services.AddScoped<IValidator<CreateDriverCommand>, CreateDriverCommandValidator>();
+        services.AddScoped<IValidator<CreateCompanyCommand>, CreateCompanyCommandValidator>();
     }
 }

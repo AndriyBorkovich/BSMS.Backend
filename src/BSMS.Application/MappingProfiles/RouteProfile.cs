@@ -10,7 +10,7 @@ public class RouteProfile : IRegister
     {
         config.NewConfig<CreateRouteCommand, Route>()
             .Map(dest => dest.Stops, src => src.StopsList)
-            .AfterMapping((src, dest) =>
+            .AfterMapping((_, dest) =>
             {
                 // assign stops order
                 if (dest.Stops.Count > 1)

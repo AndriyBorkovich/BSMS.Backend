@@ -12,12 +12,12 @@ namespace BSMS.API.Controllers;
 public class BusController(ISender mediator) : ControllerBase
 {
     /// <summary>
-    /// Create new bus with its schedule
+    /// Create new bus with it's schedule
     /// </summary>
-    /// <param name="command">Bus parameters and its schedule data</param>
-    /// <returns>ID of created bus</returns>
+    /// <param name="command">Bus data and its schedule data</param>
+    /// <returns>ID of the created bus</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> CreateBus(CreateBusCommand command)
+    public async Task<ActionResult<int>> Create(CreateBusCommand command)
     {
         var result = await mediator.Send(command);
         

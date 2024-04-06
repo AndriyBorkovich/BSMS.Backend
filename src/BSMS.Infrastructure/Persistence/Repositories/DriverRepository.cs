@@ -3,9 +3,9 @@ using BSMS.Core.Entities;
 
 namespace BSMS.Infrastructure.Persistence.Repositories;
 
-public class RouteRepository : GenericRepository<Route>, IRouteRepository
+public class DriverRepository : GenericRepository<Driver>, IDriverRepository
 {
-    public RouteRepository(BusStationContext context) : base(context)
+    public DriverRepository(BusStationContext context) : base(context)
     {
     }
 }

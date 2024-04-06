@@ -1,5 +1,4 @@
-﻿using BSMS.Application.Contracts;
-using BSMS.Application.Contracts.Persistence;
+﻿using BSMS.Application.Contracts.Persistence;
 using BSMS.Infrastructure.Persistence;
 using BSMS.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +16,18 @@ public static class PersistenceRegistration
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"));
         });
         
+        AddRepositories(services);
+
+        return services;
+    }
+
+    private static void AddRepositories(IServiceCollection services)
+    {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IBusRepository, BusRepository>();
         services.AddScoped<IRouteRepository, RouteRepository>();
-
-        return services;
+        services.AddScoped<IPassengerRepository, PassengerRepository>();
+        services.AddScoped<IDriverRepository, DriverRepository>();
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
     }
 }

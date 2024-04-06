@@ -11,10 +11,10 @@ namespace BSMS.API.Controllers;
 public class RouteController(ISender mediator) : ControllerBase
 {
     /// <summary>
-    /// create new route (with stops included)
+    /// Create new route (with stops included)
     /// </summary>
     /// <param name="command">Contains origin and destination of route and list of it's stops names</param>
-    /// <returns></returns>
+    /// <returns>ID of the created route</returns>
     [HttpPost("Create")]
     public async Task<ActionResult<int>> Create(CreateRouteCommand command)
     {

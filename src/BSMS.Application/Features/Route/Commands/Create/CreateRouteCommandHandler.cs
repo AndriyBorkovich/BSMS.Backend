@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using BSMS.Application.Contracts;
+using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Extensions;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
