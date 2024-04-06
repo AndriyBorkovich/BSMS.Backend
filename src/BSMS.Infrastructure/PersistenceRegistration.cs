@@ -4,6 +4,8 @@ using BSMS.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace BSMS.Infrastructure;
 
@@ -13,7 +15,11 @@ public static class PersistenceRegistration
     {
         services.AddDbContext<BusStationContext>(opt =>
         {
-            opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"));
+            opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"))
+                .LogTo(Log.Logger.Information, LogLevel.Information);
+            
+            opt.EnableDetailedErrors();
+            opt.EnableSensitiveDataLogging();
         });
         
         AddRepositories(services);

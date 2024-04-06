@@ -1,6 +1,5 @@
 ﻿using BSMS.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BSMS.Infrastructure.Persistence;
 
