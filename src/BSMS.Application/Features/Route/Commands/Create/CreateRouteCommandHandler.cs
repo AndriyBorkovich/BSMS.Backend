@@ -11,7 +11,7 @@ using MediatR;
 namespace BSMS.Application.Features.Route.Commands.Create;
 
 public class CreateRouteCommandHandler(
-    IRouteRepository routeRepository,
+    IRouteRepository repository,
     IMapper mapper,
     IValidator<CreateRouteCommand> validator,
     MethodResultFactory methodResultFactory) 
@@ -30,7 +30,7 @@ public class CreateRouteCommandHandler(
         
         var route = mapper.Map<Core.Entities.Route>(request);
 
-        await routeRepository.InsertAsync(route);
+        await repository.InsertAsync(route);
 
         result.Data = new CreatedEntityResponse(route.RouteId);
 

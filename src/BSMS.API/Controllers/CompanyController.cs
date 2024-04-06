@@ -1,5 +1,8 @@
 ﻿using BSMS.API.Extensions;
+using BSMS.Application.Features.Bus.Commands.Delete;
+using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Company.Commands.Create;
+using BSMS.Application.Features.Company.Commands.Delete;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +22,19 @@ public class CompanyController(ISender sender) : ControllerBase
     public async Task<ActionResult<int>> Create(CreateCompanyCommand command)
     {
         var result = await sender.Send(command);
+
+        return result.DecideWhatToReturn();
+    }
+    
+    /// <summary>
+    /// Delete specified company
+    /// </summary>
+    /// <param name="id">ID of the company</param>
+    /// <returns>Message of action result</returns>
+    [HttpDelete("Delete/{id}")]
+    public async Task<ActionResult<MessageResponse>> Delete(int id)
+    {
+        var result = await sender.Send(new DeleteCompanyCommand(id));
 
         return result.DecideWhatToReturn();
     }

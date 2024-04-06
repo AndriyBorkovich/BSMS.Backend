@@ -16,7 +16,7 @@ public record CreatePassengerCommand(
     string Email) : IRequest<MethodResult<CreatedEntityResponse>>;
 
 public class CreatePassengerCommandHandler(
-    IPassengerRepository passengerRepository,
+    IPassengerRepository repository,
     IValidator<CreatePassengerCommand> validator,
     IMapper mapper,
     MethodResultFactory methodResultFactory) : IRequestHandler<CreatePassengerCommand, MethodResult<CreatedEntityResponse>>
@@ -34,7 +34,7 @@ public class CreatePassengerCommandHandler(
 
         var passenger = mapper.Map<Core.Entities.Passenger>(request);
 
-        await passengerRepository.InsertAsync(passenger);
+        await repository.InsertAsync(passenger);
 
         result.Data = new CreatedEntityResponse(passenger.PassengerId);
 

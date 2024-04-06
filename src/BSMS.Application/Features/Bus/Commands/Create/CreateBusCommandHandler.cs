@@ -7,7 +7,7 @@ using MediatR;
 namespace BSMS.Application.Features.Bus.Commands.Create;
 
 public class CreateBusCommandHandler(
-        IBusRepository busRepository, 
+        IBusRepository repository, 
         IMapper mapper,
         MethodResultFactory methodResultFactory)
     : IRequestHandler<CreateBusCommand, MethodResult<CreatedEntityResponse>>
@@ -17,7 +17,7 @@ public class CreateBusCommandHandler(
         var result = methodResultFactory.Create<CreatedEntityResponse>();
         var bus = mapper.Map<Core.Entities.Bus>(request);
 
-        await busRepository.InsertAsync(bus);
+        await repository.InsertAsync(bus);
 
         result.Data = new CreatedEntityResponse(bus.BusId);
         
