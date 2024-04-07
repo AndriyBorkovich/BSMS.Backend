@@ -10,8 +10,8 @@ public class BusScheduleEntry
     public int BusId { get; set; }
     public int RouteId { get; set; }
     
-    public DateTime DepartureTime { get; set; }
-    public DateTime ArrivalTime { get; set; }
+    public TimeOnly DepartureTime { get; set; }
+    public TimeOnly ArrivalTime { get; set; }
     public Direction MoveDirection { get; set; }
     public DayOfWeek Day { get; set; }
     
