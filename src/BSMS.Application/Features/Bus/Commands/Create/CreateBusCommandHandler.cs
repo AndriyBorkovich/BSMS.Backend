@@ -18,7 +18,7 @@ public class CreateBusCommandHandler(
         var bus = mapper.Map<Core.Entities.Bus>(request);
 
         await repository.InsertAsync(bus);
-
+        
         result.Data = new CreatedEntityResponse(bus.BusId);
         
         return result;

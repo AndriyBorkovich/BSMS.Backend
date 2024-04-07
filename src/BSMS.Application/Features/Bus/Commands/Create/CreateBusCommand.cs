@@ -13,7 +13,7 @@ public record CreateBusCommand(
 
 public record CreateBusSchedule(
     int RouteId,
-    DateTime DepartureTime,
-    DateTime ArrivalTime,
+    TimeOnly DepartureTime,
+    TimeOnly ArrivalTime,
     Direction MoveDirection,
     DayOfWeek DayOfWeek);
