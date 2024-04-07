@@ -1,7 +1,7 @@
 ﻿using BSMS.API.Extensions;
-using BSMS.Application.Features.Bus.Commands;
 using BSMS.Application.Features.Bus.Commands.Create;
 using BSMS.Application.Features.Bus.Commands.Delete;
+using BSMS.Application.Features.Bus.Queries.GetAll;
 using BSMS.Application.Features.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +35,19 @@ public class BusController(ISender sender) : ControllerBase
     public async Task<ActionResult<MessageResponse>> Delete(int id)
     {
         var result = await sender.Send(new DeleteBusCommand(id));
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get all buses
+    /// </summary>
+    /// <param name="query">Filtering fields</param>
+    /// <returns>List with bus data, driver and company name</returns>
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<GetAllBusesResponse>> GetAll(GetAllBusesQuery query)
+    {
+        var result = await sender.Send(query);
 
         return result.DecideWhatToReturn();
     }

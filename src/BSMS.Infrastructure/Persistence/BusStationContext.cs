@@ -1,4 +1,5 @@
 ﻿using BSMS.Core.Entities;
+using BSMS.Core.Views;
 using Microsoft.EntityFrameworkCore;
 
 namespace BSMS.Infrastructure.Persistence;
@@ -26,6 +27,7 @@ public class BusStationContext : DbContext
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketPayment> TicketPayments { get; set; }
     public DbSet<Trip> Trips { get; set; }
+    public DbSet<BusDetailsView> BusesDetailsView { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,5 +52,9 @@ public class BusStationContext : DbContext
             .Property(bs => bs.MoveDirection)
             .HasConversion<string>()
             .HasMaxLength(20);
+
+        modelBuilder.Entity<BusDetailsView>()
+            .ToView(nameof(BusDetailsView))
+            .HasKey(b => b.BusId);
     }
 }

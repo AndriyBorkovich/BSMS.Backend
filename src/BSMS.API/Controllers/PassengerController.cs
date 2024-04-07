@@ -1,6 +1,5 @@
 ﻿using BSMS.API.Extensions;
 using BSMS.Application.Features.Common;
-using BSMS.Application.Features.Driver.Commands.Delete;
 using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Delete;
 using MediatR;

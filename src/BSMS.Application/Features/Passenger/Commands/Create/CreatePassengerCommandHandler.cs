@@ -21,7 +21,9 @@ public class CreatePassengerCommandHandler(
     IMapper mapper,
     MethodResultFactory methodResultFactory) : IRequestHandler<CreatePassengerCommand, MethodResult<CreatedEntityResponse>>
 {
-    public async Task<MethodResult<CreatedEntityResponse>> Handle(CreatePassengerCommand request, CancellationToken cancellationToken)
+    public async Task<MethodResult<CreatedEntityResponse>> Handle(
+        CreatePassengerCommand request, 
+        CancellationToken cancellationToken)
     {
         var result = methodResultFactory.Create<CreatedEntityResponse>();
         
