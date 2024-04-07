@@ -6,7 +6,6 @@ public class Driver
 {
     public int DriverId { get; set; }
     public int? CompanyId { get; set; }
-    public int? BusId { get; set; }
     
     [StringLength(50)]
     public string FirstName { get; set; } = null!;
@@ -15,6 +14,6 @@ public class Driver
     [StringLength(50)]
     public string? DriverLicense { get; set; }
     
-    public Bus? Bus { get; set; }
+    public List<Bus> Buses { get; set; }
     public Company? Company { get; set; }
 }

@@ -7,9 +7,13 @@ namespace BSMS.Application.Features.Bus.Commands.Create;
 public class CreateBusCommandValidator : AbstractValidator<CreateBusCommand>
 {
     private readonly IRouteRepository _routeRepository;
-    public CreateBusCommandValidator(IRouteRepository routeRepository)
+    private readonly IDriverRepository _driverRepository;
+    public CreateBusCommandValidator(
+        IRouteRepository routeRepository, 
+        IDriverRepository driverRepository)
     {
         _routeRepository = routeRepository;
+        _driverRepository = driverRepository;
 
         RuleFor(c => c.Brand)
             .NotEmpty()
@@ -38,6 +42,10 @@ public class CreateBusCommandValidator : AbstractValidator<CreateBusCommand>
         RuleFor(c => c.BusScheduleEntries)
             .Must(HaveNoTimeIntersections)
             .WithMessage("The bus schedule can't have time intersections");
+
+        RuleFor(c => c.DriverId)
+            .MustAsync(DriverExists)
+            .WithMessage("Driver must exists in DB");
     }
 
     private async Task<bool> HaveValidRoutesForSchedule(CreateBusCommand command, CancellationToken cancellationToken)
@@ -56,15 +64,26 @@ public class CreateBusCommandValidator : AbstractValidator<CreateBusCommand>
     private bool HaveNoTimeIntersections(List<CreateBusSchedule> newBusSchedules)
     {
         var groupedSchedules = newBusSchedules.GroupBy(schedule => schedule.DayOfWeek);
+        var enumerable = groupedSchedules.ToList();
+        
+        return !enumerable.Exists(group => HasTimeIntersectionsInGroup(group.ToList()));
+    }
 
-        return !groupedSchedules.Any(group => HasTimeIntersectionsInGroup(group.ToList())) && groupedSchedules.Any(g => HasTimeIntersectionsInGroup(g.ToList()));
+    private async Task<bool> DriverExists(int? driverId, CancellationToken cancellationToken)
+    {
+        if (driverId is not null)
+        {
+            return await _driverRepository.AnyAsync(d => d.DriverId == driverId);
+        }
+
+        return true;
     }
 
     private bool HasTimeIntersectionsInGroup(List<CreateBusSchedule> schedules)
     {
-        for (int i = 0; i < schedules.Count - 1; i++)
+        for (var i = 0; i < schedules.Count - 1; i++)
         {
-            for (int j = i + 1; j < schedules.Count; j++)
+            for (var j = i + 1; j < schedules.Count; j++)
             {
                 if (TimeIntersects(schedules[i].DepartureTime, schedules[i].ArrivalTime,
                         schedules[j].DepartureTime, schedules[j].ArrivalTime))

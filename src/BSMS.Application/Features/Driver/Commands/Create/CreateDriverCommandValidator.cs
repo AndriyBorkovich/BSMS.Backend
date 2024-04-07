@@ -7,11 +7,9 @@ namespace BSMS.Application.Features.Driver.Commands.Create;
 public class CreateDriverCommandValidator : AbstractValidator<CreateDriverCommand>
 {
     private readonly ICompanyRepository _companyRepository;
-    private readonly IBusRepository _busRepository;
-    public CreateDriverCommandValidator(ICompanyRepository companyRepository, IBusRepository busRepository)
+    public CreateDriverCommandValidator(ICompanyRepository companyRepository)
     {
         _companyRepository = companyRepository;
-        _busRepository = busRepository;
         
         RuleFor(c => c.FirstName)
             .NotEmpty()
@@ -34,19 +32,10 @@ public class CreateDriverCommandValidator : AbstractValidator<CreateDriverComman
         RuleFor(c => c.CompanyId)
             .MustAsync(CompanyExists)
             .WithMessage("Chosen company must exist!");
-
-        RuleFor(c => c.BusId)
-            .MustAsync(BusExists)
-            .WithMessage("Chosen bus must exist!");
     }
 
     private Task<bool> CompanyExists(int? companyId, CancellationToken cancellationToken)
     {
         return companyId is not null ? _companyRepository.AnyAsync(c => c.CompanyId == companyId) : Task.FromResult(true);
-    }
-    
-    private Task<bool> BusExists(int? busId, CancellationToken cancellationToken)
-    {
-        return busId is not null ? _busRepository.AnyAsync(b => b.BusId == busId) : Task.FromResult(true);
     }
 }
