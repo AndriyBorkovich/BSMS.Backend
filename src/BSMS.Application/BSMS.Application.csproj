@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Contracts\Services\" />
-      <Folder Include="Features\BusReview\Commands\Create\" />
       <Folder Include="Features\Bus\Commands\Edit\" />
       <Folder Include="Features\Bus\Queries\GetById\" />
       <Folder Include="Features\Route\Queries\" />

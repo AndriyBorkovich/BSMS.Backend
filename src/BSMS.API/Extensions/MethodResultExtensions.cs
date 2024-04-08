@@ -12,7 +12,7 @@ public static class MethodResultExtensions
             : new OkObjectResult(result.Data);
     }
     
-    private static ObjectResult SetErrorResultToReturn<T>(this MethodResult<T> result)
+    private static ObjectResult SetErrorResultToReturn<T>(MethodResult<T> result)
     {
         return new ObjectResult(result.Error) { StatusCode = (int)result.ErrorStatusCode };
     }
