@@ -5,7 +5,6 @@ namespace BSMS.Core.Entities;
 public class Passenger
 {
     public int PassengerId { get; set; }
-    public int? BusId { get; set; }
     
     [StringLength(50)]
     public string FirstName { get; set; } = null!;
@@ -16,7 +15,6 @@ public class Passenger
     [StringLength(50)]
     public string? Email { get; set; }
     
-    public Bus? Bus { get; set; }
     public List<BusReview> BusReviews { get; set; }
     public List<TicketPayment> Payments { get; set; }
 }

@@ -18,6 +18,5 @@ public class Bus
     public List<BusScheduleEntry> BusScheduleEntries { get; set; }
     public List<BusReview> BusReviews { get; set; }
     public Driver? Driver { get; set; }
-    public List<Passenger> Passengers { get; set; }
     public List<Seat> Seats { get; set; }
 }
