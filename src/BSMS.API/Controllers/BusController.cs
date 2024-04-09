@@ -45,7 +45,8 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="query">Filtering fields</param>
     /// <returns>List with bus data, driver and company name</returns>
     [HttpGet("GetAll")]
-    public async Task<ActionResult<GetAllBusesResponse>> GetAll(GetAllBusesQuery query)
+    public async Task<ActionResult<List<GetAllBusesResponse>>> GetAll(
+        [FromQuery] GetAllBusesQuery query)
     {
         var result = await sender.Send(query);
 

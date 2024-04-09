@@ -2,6 +2,7 @@
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Delete;
+using BSMS.Application.Features.Passenger.Queries.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,20 @@ public class PassengerController(ISender sender) : ControllerBase
     public async Task<ActionResult<MessageResponse>> Delete(int id)
     {
         var result = await sender.Send(new DeletePassengerCommand(id));
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get all passengers
+    /// </summary>
+    /// <param name="query">Filtering fields</param>
+    /// <returns>List with passengers' data: full name, phone, email</returns>
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<List<GetAllPassengersResponse>>> GetAll(
+        [FromQuery] GetAllPassengersQuery query)
+    {
+        var result = await sender.Send(query);
 
         return result.DecideWhatToReturn();
     }
