@@ -9,7 +9,7 @@ public record CreateBusCommand(
     string Brand,
     int Capacity,
     string Number,
-    int? DriverId,
+    int DriverId,
     List<CreateBusSchedule> BusScheduleEntries) : IRequest<MethodResult<CreatedEntityResponse>>;
 
 public record CreateBusSchedule(

@@ -34,8 +34,8 @@ public class CreateDriverCommandValidator : AbstractValidator<CreateDriverComman
             .WithMessage("Chosen company must exist!");
     }
 
-    private Task<bool> CompanyExists(int? companyId, CancellationToken cancellationToken)
+    private Task<bool> CompanyExists(int companyId, CancellationToken cancellationToken)
     {
-        return companyId is not null ? _companyRepository.AnyAsync(c => c.CompanyId == companyId) : Task.FromResult(true);
+        return _companyRepository.AnyAsync(c => c.CompanyId == companyId);
     }
 }

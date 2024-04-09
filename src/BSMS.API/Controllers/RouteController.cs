@@ -18,7 +18,7 @@ public class RouteController(ISender sender) : ControllerBase
     /// <param name="command">Contains origin and destination of route and list of it's stops names</param>
     /// <returns>ID of the created route</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> Create(CreateRouteCommand command)
+    public async Task<ActionResult<CreatedEntityResponse>> Create(CreateRouteCommand command)
     {
         var result = await sender.Send(command);
 

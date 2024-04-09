@@ -69,14 +69,9 @@ public class CreateBusCommandValidator : AbstractValidator<CreateBusCommand>
         return !enumerable.Exists(group => HasTimeIntersectionsInGroup(group.ToList()));
     }
 
-    private async Task<bool> DriverExists(int? driverId, CancellationToken cancellationToken)
+    private async Task<bool> DriverExists(int driverId, CancellationToken cancellationToken)
     {
-        if (driverId is not null)
-        {
-            return await _driverRepository.AnyAsync(d => d.DriverId == driverId);
-        }
-
-        return true;
+        return await _driverRepository.AnyAsync(d => d.DriverId == driverId);
     }
 
     private bool HasTimeIntersectionsInGroup(List<CreateBusSchedule> schedules)

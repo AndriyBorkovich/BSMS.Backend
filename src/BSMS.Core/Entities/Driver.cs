@@ -5,7 +5,7 @@ namespace BSMS.Core.Entities;
 public class Driver
 {
     public int DriverId { get; set; }
-    public int? CompanyId { get; set; }
+    public int CompanyId { get; set; }
     
     [StringLength(50)]
     public string FirstName { get; set; } = null!;

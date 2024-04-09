@@ -13,8 +13,7 @@ public record CreateDriverCommand(
     string FirstName,
     string LastName,
     string DriverLicense,
-    int? CompanyId,
-    int? BusId) : IRequest<MethodResult<CreatedEntityResponse>>;
+    int CompanyId) : IRequest<MethodResult<CreatedEntityResponse>>;
 
 public class CreateDriverCommandHandler(
     IDriverRepository repository,

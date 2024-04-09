@@ -19,7 +19,7 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="command">Bus data and its schedule data</param>
     /// <returns>ID of the created bus</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> Create(CreateBusCommand command)
+    public async Task<ActionResult<CreatedEntityResponse>> Create(CreateBusCommand command)
     {
         var result = await sender.Send(command);
         

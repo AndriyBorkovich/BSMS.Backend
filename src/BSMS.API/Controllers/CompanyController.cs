@@ -18,7 +18,7 @@ public class CompanyController(ISender sender) : ControllerBase
     /// <param name="command">Company's data</param>
     /// <returns>ID of the created company</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> Create(CreateCompanyCommand command)
+    public async Task<ActionResult<CreatedEntityResponse>> Create(CreateCompanyCommand command)
     {
         var result = await sender.Send(command);
 

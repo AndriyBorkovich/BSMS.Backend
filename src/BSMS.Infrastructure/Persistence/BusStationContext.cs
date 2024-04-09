@@ -31,6 +31,10 @@ public class BusStationContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // prevent from SaveChanges() exception caused by trigger
+        modelBuilder.Entity<Bus>()
+            .ToTable(tb => tb.UseSqlOutputClause(false));
+        
         modelBuilder.Entity<Stop>()
             .HasMany(s => s.TicketStartStops)
             .WithOne(t => t.StartStop)

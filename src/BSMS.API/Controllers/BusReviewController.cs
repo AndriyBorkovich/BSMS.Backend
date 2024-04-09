@@ -1,5 +1,6 @@
 ﻿using BSMS.API.Extensions;
 using BSMS.Application.Features.BusReview.Commands.Create;
+using BSMS.Application.Features.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ public class BusReviewController(ISender sender) : ControllerBase
     /// <param name="command">Bus and passenger IDs, marks data</param>
     /// <returns>ID of the created review</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> Create(CreateBusReviewCommand command)
+    public async Task<ActionResult<CreatedEntityResponse>> Create(CreateBusReviewCommand command)
     {
         var result = await sender.Send(command);
         

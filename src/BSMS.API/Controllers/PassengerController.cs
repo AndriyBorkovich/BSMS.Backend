@@ -19,7 +19,7 @@ public class PassengerController(ISender sender) : ControllerBase
     /// <param name="command">Passenger's data</param>
     /// <returns>ID of the created passenger</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> Create(CreatePassengerCommand command)
+    public async Task<ActionResult<CreatedEntityResponse>> Create(CreatePassengerCommand command)
     {
         var result = await sender.Send(command);
 

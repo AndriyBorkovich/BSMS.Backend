@@ -18,7 +18,7 @@ public class DriverController(ISender sender) : ControllerBase
     /// <param name="command">Driver data</param>
     /// <returns>ID of the created driver</returns>
     [HttpPost("Create")]
-    public async Task<ActionResult<int>> Create(CreateDriverCommand command)
+    public async Task<ActionResult<CreatedEntityResponse>> Create(CreateDriverCommand command)
     {
         var result = await sender.Send(command);
 
