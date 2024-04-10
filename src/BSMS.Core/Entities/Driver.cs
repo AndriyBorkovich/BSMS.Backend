@@ -15,5 +15,5 @@ public class Driver
     public string? DriverLicense { get; set; }
     
     public List<Bus> Buses { get; set; }
-    public Company? Company { get; set; }
+    public Company Company { get; set; }
 }

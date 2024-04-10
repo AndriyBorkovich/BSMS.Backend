@@ -23,23 +23,23 @@ public class CreateBusReviewCommandValidator : AbstractValidator<CreateBusReview
         const int minRating = 1, maxRating = 5;
         
         RuleFor(x => x.ComfortRating)
-            .InclusiveBetween(minRating, maxRating).When(x => x.ComfortRating.HasValue)
+            .InclusiveBetween(minRating, maxRating)
             .WithMessage("Comfort rating must be between 1 and 5.");
 
         RuleFor(x => x.PunctualityRating)
-            .InclusiveBetween(minRating, maxRating).When(x => x.PunctualityRating.HasValue)
+            .InclusiveBetween(minRating, maxRating)
             .WithMessage("Punctuality rating must be between 1 and 5.");
 
         RuleFor(x => x.PriceQualityRatioRating)
-            .InclusiveBetween(minRating, maxRating).When(x => x.PriceQualityRatioRating.HasValue)
+            .InclusiveBetween(minRating, maxRating)
             .WithMessage("Price quality ratio rating must be between 1 and 5.");
 
         RuleFor(x => x.InternetConnectionRating)
-            .InclusiveBetween(minRating, maxRating).When(x => x.InternetConnectionRating.HasValue)
+            .InclusiveBetween(minRating, maxRating)
             .WithMessage("Internet connection rating must be between 1 and 5.");
 
         RuleFor(x => x.SanitaryConditionsRating)
-            .InclusiveBetween(minRating, maxRating).When(x => x.SanitaryConditionsRating.HasValue)
+            .InclusiveBetween(minRating, maxRating)
             .WithMessage("Sanitary conditions rating must be between 1 and 5.");
     }
 }

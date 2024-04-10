@@ -6,7 +6,7 @@ namespace BSMS.API;
 /// <summary>
 /// handles all exceptions in application
 /// </summary>
-public class GlobalExceptionHandler(ILogger logger) : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     /// <inheritdoc />
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)

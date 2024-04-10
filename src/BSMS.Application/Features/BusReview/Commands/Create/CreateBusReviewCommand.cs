@@ -6,9 +6,9 @@ namespace BSMS.Application.Features.BusReview.Commands.Create;
 public record CreateBusReviewCommand(
     int BusId,
     int PassengerId,
-    int? ComfortRating,
-    int? PunctualityRating,
-    int? PriceQualityRatioRating,
-    int? InternetConnectionRating,
-    int? SanitaryConditionsRating,
+    int ComfortRating,
+    int PunctualityRating,
+    int PriceQualityRatioRating,
+    int InternetConnectionRating,
+    int SanitaryConditionsRating,
     string? Comments) : IRequest<MethodResult<int>>;
