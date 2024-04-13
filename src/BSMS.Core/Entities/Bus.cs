@@ -6,6 +6,7 @@ public class Bus
 {
     public int BusId { get; set; }
     public int DriverId { get; set; }
+    
     public int Capacity { get; set; }
     [StringLength(50)]
     public string Brand { get; set; } = null!;

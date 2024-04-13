@@ -7,6 +7,7 @@ public class BusReview
     public int BusReviewId { get; set; }
     public int BusId { get; set; }
     public int PassengerId { get; set; }
+    
     [Range(1, 5)]
     public int ComfortRating { get; set; }
     [Range(1, 5)]

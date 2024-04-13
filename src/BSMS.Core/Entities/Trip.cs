@@ -7,11 +7,12 @@ namespace BSMS.Core.Entities;
 public class Trip
 {
     public int TripId { get; set; }
-    public TripStatus Status { get; set; }
     public int BusScheduleEntryId { get; set; }
+    
     public DateTime DepartureTime { get; set; }
     public DateTime ArrivalTime { get; set; }
     
     public BusScheduleEntry BusScheduleEntry { get; set; }
     public List<TicketPayment> BoughtTickets { get; set; }
+    public List<TripStatus> Statuses { get; set; }
 }
