@@ -27,6 +27,8 @@ public class BusStationContext : DbContext
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketPayment> TicketPayments { get; set; }
     public DbSet<Trip> Trips { get; set; }
+    public DbSet<TicketStatus> TicketStatuses { get; set; }
+    public DbSet<TripStatus> TripStatuses { get; set; }
     public DbSet<BusDetailsView> BusesDetailsView { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,5 +62,35 @@ public class BusStationContext : DbContext
         modelBuilder.Entity<BusDetailsView>()
             .ToView(nameof(BusDetailsView))
             .HasKey(b => b.BusId);
+
+        modelBuilder.Entity<TicketPayment>()
+            .Property(tp => tp.PaymentType)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<TicketStatus>()
+            .Property(ts => ts.Status)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+        
+        modelBuilder.Entity<TripStatus>()
+            .Property(ts => ts.Status)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<Ticket>()
+            .HasOne(t => t.Payment)
+            .WithOne(p => p.Ticket)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+        modelBuilder.Entity<Ticket>()
+            .HasMany(t => t.Statuses)
+            .WithOne(s => s.Ticket)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+        modelBuilder.Entity<Trip>()
+            .HasMany(t => t.Statuses)
+            .WithOne(s => s.Trip)
+            .OnDelete(DeleteBehavior.ClientCascade);
     }
 }

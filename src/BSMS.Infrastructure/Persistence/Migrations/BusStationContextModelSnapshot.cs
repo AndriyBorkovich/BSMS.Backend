@@ -356,8 +356,10 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentType")
-                        .HasColumnType("int");
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
@@ -388,19 +390,19 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusTicketStatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
                     b.HasKey("TicketStatusId");
 
-                    b.HasIndex("StatusTicketStatusId");
-
                     b.HasIndex("TicketId");
 
-                    b.ToTable("TicketStatus");
+                    b.ToTable("TicketStatuses");
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Trip", b =>
@@ -438,19 +440,19 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusTripStatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TripId")
                         .HasColumnType("int");
 
                     b.HasKey("TripStatusId");
 
-                    b.HasIndex("StatusTripStatusId");
-
                     b.HasIndex("TripId");
 
-                    b.ToTable("TripStatus");
+                    b.ToTable("TripStatuses");
                 });
 
             modelBuilder.Entity("BSMS.Core.Views.BusDetailsView", b =>
@@ -609,7 +611,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                     b.HasOne("BSMS.Core.Entities.Ticket", "Ticket")
                         .WithOne("Payment")
                         .HasForeignKey("BSMS.Core.Entities.TicketPayment", "TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("BSMS.Core.Entities.Trip", "Trip")
@@ -627,19 +629,11 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("BSMS.Core.Entities.TicketStatus", b =>
                 {
-                    b.HasOne("BSMS.Core.Entities.TicketStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusTicketStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BSMS.Core.Entities.Ticket", "Ticket")
                         .WithMany("Statuses")
                         .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
-
-                    b.Navigation("Status");
 
                     b.Navigation("Ticket");
                 });
@@ -657,19 +651,11 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("BSMS.Core.Entities.TripStatus", b =>
                 {
-                    b.HasOne("BSMS.Core.Entities.TripStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusTripStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BSMS.Core.Entities.Trip", "Trip")
                         .WithMany("Statuses")
                         .HasForeignKey("TripId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
-
-                    b.Navigation("Status");
 
                     b.Navigation("Trip");
                 });

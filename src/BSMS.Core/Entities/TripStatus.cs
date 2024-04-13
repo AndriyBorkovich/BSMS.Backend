@@ -7,7 +7,7 @@ public class TripStatus
     public int TripStatusId { get; set; }
     public int TripId { get; set; }
     
-    public TripStatus Status { get; set; }
+    public Enums.TripStatus Status { get; set; }
     public DateTime CreatedDate { get; set; }
     
     public Trip Trip { get; set; }

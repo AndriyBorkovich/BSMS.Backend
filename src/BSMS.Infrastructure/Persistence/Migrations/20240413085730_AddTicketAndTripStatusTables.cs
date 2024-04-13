@@ -15,10 +15,6 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 name: "FK_TicketPayments_Passengers_PassengerId",
                 table: "TicketPayments");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_TicketPayments_Tickets_TicketId",
-                table: "TicketPayments");
-
             migrationBuilder.DropIndex(
                 name: "IX_TicketPayments_TicketId",
                 table: "TicketPayments");
@@ -46,6 +42,15 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 oldType: "int",
                 oldNullable: true);
 
+            migrationBuilder.AlterColumn<string>(
+                name: "PaymentType",
+                table: "TicketPayments",
+                type: "nvarchar(20)",
+                maxLength: 20,
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "int");
+
             migrationBuilder.AlterColumn<int>(
                 name: "PassengerId",
                 table: "TicketPayments",
@@ -57,57 +62,43 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 oldNullable: true);
 
             migrationBuilder.CreateTable(
-                name: "TicketStatus",
+                name: "TicketStatuses",
                 columns: table => new
                 {
                     TicketStatusId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TicketId = table.Column<int>(type: "int", nullable: false),
-                    StatusTicketStatusId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TicketStatus", x => x.TicketStatusId);
+                    table.PrimaryKey("PK_TicketStatuses", x => x.TicketStatusId);
                     table.ForeignKey(
-                        name: "FK_TicketStatus_TicketStatus_StatusTicketStatusId",
-                        column: x => x.StatusTicketStatusId,
-                        principalTable: "TicketStatus",
-                        principalColumn: "TicketStatusId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TicketStatus_Tickets_TicketId",
+                        name: "FK_TicketStatuses_Tickets_TicketId",
                         column: x => x.TicketId,
                         principalTable: "Tickets",
-                        principalColumn: "TicketId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TicketId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "TripStatus",
+                name: "TripStatuses",
                 columns: table => new
                 {
                     TripStatusId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TripId = table.Column<int>(type: "int", nullable: false),
-                    StatusTripStatusId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TripStatus", x => x.TripStatusId);
+                    table.PrimaryKey("PK_TripStatuses", x => x.TripStatusId);
                     table.ForeignKey(
-                        name: "FK_TripStatus_TripStatus_StatusTripStatusId",
-                        column: x => x.StatusTripStatusId,
-                        principalTable: "TripStatus",
-                        principalColumn: "TripStatusId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TripStatus_Trips_TripId",
+                        name: "FK_TripStatuses_Trips_TripId",
                         column: x => x.TripId,
                         principalTable: "Trips",
-                        principalColumn: "TripId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TripId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -117,23 +108,13 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TicketStatus_StatusTicketStatusId",
-                table: "TicketStatus",
-                column: "StatusTicketStatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TicketStatus_TicketId",
-                table: "TicketStatus",
+                name: "IX_TicketStatuses_TicketId",
+                table: "TicketStatuses",
                 column: "TicketId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripStatus_StatusTripStatusId",
-                table: "TripStatus",
-                column: "StatusTripStatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TripStatus_TripId",
-                table: "TripStatus",
+                name: "IX_TripStatuses_TripId",
+                table: "TripStatuses",
                 column: "TripId");
 
             migrationBuilder.AddForeignKey(
@@ -142,14 +123,6 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 column: "PassengerId",
                 principalTable: "Passengers",
                 principalColumn: "PassengerId",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_TicketPayments_Tickets_TicketId",
-                table: "TicketPayments",
-                column: "TicketId",
-                principalTable: "Tickets",
-                principalColumn: "TicketId",
                 onDelete: ReferentialAction.Cascade);
         }
 
@@ -160,15 +133,11 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 name: "FK_TicketPayments_Passengers_PassengerId",
                 table: "TicketPayments");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_TicketPayments_Tickets_TicketId",
-                table: "TicketPayments");
+            migrationBuilder.DropTable(
+                name: "TicketStatuses");
 
             migrationBuilder.DropTable(
-                name: "TicketStatus");
-
-            migrationBuilder.DropTable(
-                name: "TripStatus");
+                name: "TripStatuses");
 
             migrationBuilder.DropIndex(
                 name: "IX_TicketPayments_TicketId",
@@ -193,6 +162,15 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "PaymentType",
+                table: "TicketPayments",
+                type: "int",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(20)",
+                oldMaxLength: 20);
 
             migrationBuilder.AlterColumn<int>(
                 name: "PassengerId",
@@ -222,13 +200,6 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 column: "PassengerId",
                 principalTable: "Passengers",
                 principalColumn: "PassengerId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_TicketPayments_Tickets_TicketId",
-                table: "TicketPayments",
-                column: "TicketId",
-                principalTable: "Tickets",
-                principalColumn: "TicketId");
         }
     }
 }
