@@ -3,7 +3,7 @@
 public enum TicketStatus
 {
     Active = 100,
-    Used = 200,
-    Canceled = 300,
-    Expired = 400
+    InUse = 200,
+    Used = 300,
+    Canceled = 400
 }

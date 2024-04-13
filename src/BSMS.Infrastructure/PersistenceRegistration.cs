@@ -36,5 +36,12 @@ public static class PersistenceRegistration
         services.AddScoped<IDriverRepository, DriverRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<IBusReviewRepository, BusReviewRepository>();
+        services.AddScoped<ITicketRepository, TicketRepository>();
+        services.AddScoped<ISeatRepository, SeatRepository>();
+        services.AddScoped<IStopRepository, StopRepository>();
+        services.AddScoped<ITripRepository, TripRepository>();
+        services.AddScoped<ITripStatusRepository, TripStatusRepository>();
+        services.AddScoped<ITicketStatusRepository, TicketStatusRepository>();
+        services.AddScoped<ITicketPaymentRepository, TicketPaymentRepository>();
     }
 }

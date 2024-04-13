@@ -4,6 +4,7 @@ using BSMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BSMS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BusStationContext))]
-    partial class BusStationContextModelSnapshot : ModelSnapshot
+    [Migration("20240413112340_AddTriggerToCreateActiveTicketStatus")]
+    partial class AddTriggerToCreateActiveTicketStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,8 +343,6 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                     b.HasIndex("StartStopId");
 
                     b.ToTable("Tickets");
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.TicketPayment", b =>

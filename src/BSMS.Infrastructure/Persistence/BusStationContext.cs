@@ -30,11 +30,18 @@ public class BusStationContext : DbContext
     public DbSet<TicketStatus> TicketStatuses { get; set; }
     public DbSet<TripStatus> TripStatuses { get; set; }
     public DbSet<BusDetailsView> BusesDetailsView { get; set; }
+    
+    public bool StopsBelongToSameRoute(int stopId1, int stopId2)
+        => throw new NotSupportedException();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // prevent from SaveChanges() exception caused by trigger
+        // prevent from SaveChanges() exception caused by SQL trigger
         modelBuilder.Entity<Bus>()
+            .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Ticket>()
+            .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<TicketStatus>()
             .ToTable(tb => tb.UseSqlOutputClause(false));
         
         modelBuilder.Entity<Stop>()
@@ -92,5 +99,10 @@ public class BusStationContext : DbContext
             .HasMany(t => t.Statuses)
             .WithOne(s => s.Trip)
             .OnDelete(DeleteBehavior.ClientCascade);
+        
+        modelBuilder.HasDbFunction(
+                typeof(BusStationContext).GetMethod(nameof(StopsBelongToSameRoute),
+                new[] { typeof(int), typeof(int) })!)
+            .HasName("StopsBelongToSameRoute");
     }
 }

@@ -5,6 +5,7 @@ using BSMS.Application.Features.Company.Commands.Create;
 using BSMS.Application.Features.Driver.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Route.Commands.Create;
+using BSMS.Application.Features.Ticket.Commands.Create;
 using BSMS.Application.Helpers;
 using FluentValidation;
 using Mapster;
@@ -24,7 +25,8 @@ public static class ApplicationRegistration
         services.AddSingleton(mappingConfig);
         services.AddScoped<IMapper, ServiceMapper>();
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddMediatR(cfg => 
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         
         AddValidators(services);
 
@@ -39,5 +41,6 @@ public static class ApplicationRegistration
         services.AddScoped<IValidator<CreateDriverCommand>, CreateDriverCommandValidator>();
         services.AddScoped<IValidator<CreateCompanyCommand>, CreateCompanyCommandValidator>();
         services.AddScoped<IValidator<CreateBusReviewCommand>, CreateBusReviewCommandValidator>();
+        services.AddScoped<IValidator<CreateTicketCommand>, CreateTicketCommandValidator>();
     }
 }

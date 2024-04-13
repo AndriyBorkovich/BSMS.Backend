@@ -48,8 +48,8 @@ namespace BSMS.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-                DROP PROCEDURE IF EXISTS GenerateSeatsForBus;
-                DROP TRIGGER IF EXISTS GenerateSeatsOnBusInsert ON Buses;");
+                DROP TRIGGER IF EXISTS GenerateSeatsOnBusInsert ON Buses;
+                DROP PROCEDURE IF EXISTS GenerateSeatsForBus;");
         }
     }
 }
