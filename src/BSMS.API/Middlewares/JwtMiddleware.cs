@@ -13,7 +13,6 @@ public class JwtMiddleware(RequestDelegate next, IOptions<JwtSettings> jwtSettin
 
     public async Task Invoke(HttpContext context, IUserService userService)
     {
-
         var token = context.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
         if (token != null)
         {

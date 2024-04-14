@@ -57,7 +57,7 @@ public class AuthenticationService : IAuthenticationService
         
         result.Data = new AuthenticateResponse() 
         {
-            UserName = user.Username,
+            Username = user.Username,
             Token = GenerateToken(user)
         };
 
@@ -87,7 +87,7 @@ public class AuthenticationService : IAuthenticationService
 
         result.Data = new AuthenticateResponse() 
         {
-            UserName = user.Username,
+            Username = user.Username,
             Token = GenerateToken(user)
         };
 

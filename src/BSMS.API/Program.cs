@@ -45,27 +45,37 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Enable CORS
+app.UseCors("All");
+
+// Use exception handling middleware
 app.UseExceptionHandler();
 
+// Use Serilog request logging
+app.UseSerilogRequestLogging();
+
+// Use JWT middleware
 app.UseMiddleware<JwtMiddleware>();
 
-// Configure the HTTP request pipeline.
+// Enable Swagger UI (only in development)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseSerilogRequestLogging();
-
+// Enable HTTPS redirection
 app.UseHttpsRedirection();
 
+// Enable authentication
 app.UseAuthentication();
 
+// Enable authorization
 app.UseAuthorization();
 
+app.UseRouting();
+// Map controllers
 app.MapControllers();
 
-app.UseCors("All");
-
+// Run the application
 app.Run();
