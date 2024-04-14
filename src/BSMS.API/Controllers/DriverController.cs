@@ -1,7 +1,9 @@
 ﻿using BSMS.API.Extensions;
+using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Driver.Commands.Create;
 using BSMS.Application.Features.Driver.Commands.Delete;
+using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +12,7 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc />
 [ApiController]
 [Route("api/[controller]")]
+[Authorization(Role.Admin)]
 public class DriverController(ISender sender) : ControllerBase
 {
     /// <summary>

@@ -5,8 +5,9 @@ namespace BSMS.Application.Features.Ticket.Commands.Create;
 
 public class CreateTicketCommandValidator : AbstractValidator<CreateTicketCommand>
 {
-    private ISeatRepository _seatRepository;
-    private IStopRepository _stopRepository;
+    private readonly ISeatRepository _seatRepository;
+    private readonly IStopRepository _stopRepository;
+    
     public CreateTicketCommandValidator(ISeatRepository seatRepository, IStopRepository stopRepository)
     {
         _seatRepository = seatRepository;

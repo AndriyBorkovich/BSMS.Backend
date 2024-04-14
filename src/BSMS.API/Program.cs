@@ -2,6 +2,8 @@ using BSMS.API;
 using BSMS.Application;
 using BSMS.Infrastructure;
 using BSMS.API.Extensions;
+using BSMS.API.Middlewares;
+using BSMS.Infrastructure.Authorization;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 {
     loggerConfig.ReadFrom.Configuration(context.Configuration);
 });
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -27,8 +30,12 @@ builder.Services.AddProblemDetails(options =>
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
+builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration)
-                .AddApplicationServices();
+                .AddApplicationServices()
+                .AddCustomIdentityServices();
+
 
 builder.Services.AddCors(options =>
 {
@@ -40,6 +47,8 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
+app.UseMiddleware<JwtMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -50,6 +59,8 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

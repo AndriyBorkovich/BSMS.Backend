@@ -1,9 +1,12 @@
 ﻿using BSMS.API.Extensions;
+using BSMS.API.Filters;
 using BSMS.Application.Features.Bus.Commands.Create;
 using BSMS.Application.Features.Bus.Commands.Delete;
 using BSMS.Application.Features.Bus.Queries.GetAll;
 using BSMS.Application.Features.Common;
+using BSMS.Core.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BSMS.API.Controllers;
@@ -11,6 +14,7 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc />
 [Route("/api/[controller]")]
 [ApiController]
+[Authorization(Role.Admin)]
 public class BusController(ISender sender) : ControllerBase
 {
     /// <summary>

@@ -1,12 +1,15 @@
 ﻿using BSMS.API.Extensions;
+using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Ticket.Commands.Create;
+using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BSMS.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
+[Authorization(Role.Admin)]
 public class TicketController(ISender sender) : ControllerBase
 {
     /// <summary>

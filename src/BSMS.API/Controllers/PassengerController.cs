@@ -1,8 +1,10 @@
 ﻿using BSMS.API.Extensions;
+using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Delete;
 using BSMS.Application.Features.Passenger.Queries.GetAll;
+using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,7 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc />
 [ApiController]
 [Route("api/[controller]")]
+[Authorization(Role.Admin)]
 public class PassengerController(ISender sender) : ControllerBase
 {
     /// <summary>

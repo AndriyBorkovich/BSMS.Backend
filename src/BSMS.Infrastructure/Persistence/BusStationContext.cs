@@ -29,6 +29,7 @@ public class BusStationContext : DbContext
     public DbSet<Trip> Trips { get; set; }
     public DbSet<TicketStatus> TicketStatuses { get; set; }
     public DbSet<TripStatus> TripStatuses { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<BusDetailsView> BusesDetailsView { get; set; }
     
     public bool StopsBelongToSameRoute(int stopId1, int stopId2)
