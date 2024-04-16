@@ -1,5 +1,6 @@
 ﻿using BSMS.Application.Contracts.Persistence;
 using BSMS.Infrastructure.Persistence;
+using BSMS.Infrastructure.Persistence.Interceptors;
 using BSMS.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +17,8 @@ public static class PersistenceRegistration
         services.AddDbContext<BusStationContext>(opt =>
         {
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"))
-                .LogTo(Log.Logger.Information, LogLevel.Information);
-            
+                .LogTo(Log.Logger.Information, LogLevel.Information)
+                .AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migration
             opt.EnableDetailedErrors();
             opt.EnableSensitiveDataLogging();
         });

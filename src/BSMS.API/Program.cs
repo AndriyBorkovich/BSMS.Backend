@@ -31,7 +31,8 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
-builder.Services.AddAuth(builder.Configuration);
+builder.Services.AddMemoryCache();
+builder.Services.AddJwtAuth(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration)
                 .AddApplicationServices()
                 .AddCustomIdentityServices();
@@ -45,37 +46,28 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Enable CORS
 app.UseCors("All");
 
-// Use exception handling middleware
 app.UseExceptionHandler();
 
-// Use Serilog request logging
 app.UseSerilogRequestLogging();
 
-// Use JWT middleware
 app.UseMiddleware<JwtMiddleware>();
 
-// Enable Swagger UI (only in development)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Enable HTTPS redirection
 app.UseHttpsRedirection();
 
-// Enable authentication
 app.UseAuthentication();
 
-// Enable authorization
 app.UseAuthorization();
 
 app.UseRouting();
-// Map controllers
+
 app.MapControllers();
 
-// Run the application
 app.Run();

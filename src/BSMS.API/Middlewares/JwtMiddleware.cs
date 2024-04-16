@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using BSMS.Application.Helpers;
 using BSMS.Infrastructure.Authorization;
 using BSMS.Infrastructure.Authorization.Services;
 using Microsoft.Extensions.Options;
@@ -38,8 +39,13 @@ public class JwtMiddleware(RequestDelegate next, IOptions<JwtSettings> jwtSettin
         }, out var validateToken);
 
 
-        var jwtToken = (JwtSecurityToken)validateToken;
+        var jwtToken = validateToken as JwtSecurityToken;
         var userId = int.Parse(jwtToken.Claims.FirstOrDefault(_=>_.Type== JwtRegisteredClaimNames.NameId).Value);
-        context.Items["User"] = await userService.GetByIdAsync(userId);
+        var user = await userService.GetByIdAsync(userId);
+        if (user is not null)
+        {
+            context.Items["User"] = user;
+            GlobalStore.CurrentUser = user.Username;
+        }
     }
 }

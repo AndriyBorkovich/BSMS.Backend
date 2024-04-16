@@ -1,15 +1,21 @@
 ﻿using BSMS.Core.Entities;
 using BSMS.Core.Enums;
+using BSMS.Infrastructure.Authorization.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace BSMS.API.Filters;
 
-/// <inheritdoc />
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class AuthorizationAttribute(params Role[]? roles) : Attribute, IAuthorizationFilter
+public class AuthorizationAttribute : Attribute, IAuthorizationFilter
 {
-    private readonly IList<Role> _roles = roles ?? new[] { Role.Admin, Role.Passenger, Role.Passenger };
+    private readonly IList<Role> _roles;
+
+    /// <inheritdoc />
+    public AuthorizationAttribute(params Role[]? roles)
+    {
+        _roles = roles ?? new[] { Role.Admin, Role.Passenger, Role.Passenger };
+    }
 
     /// <inheritdoc />
     public void OnAuthorization(AuthorizationFilterContext context)

@@ -1,7 +1,5 @@
-﻿using System.Text;
-using BSMS.Infrastructure.Authorization.Services;
+﻿using BSMS.Infrastructure.Authorization.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BSMS.Infrastructure;
 

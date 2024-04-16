@@ -48,7 +48,7 @@ public static class ServicesExtensions
         });
     }
 
-    public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
+    public static void AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

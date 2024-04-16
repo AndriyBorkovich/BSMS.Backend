@@ -6,7 +6,6 @@ using System.Text;
 using BSMS.Application.Helpers;
 using BSMS.Core.Entities;
 using BSMS.Infrastructure.Authorization.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -22,7 +21,6 @@ public class AuthenticationService : IAuthenticationService
 
     public AuthenticationService(
         IUserService userService,
-        IConfiguration configuration,
         MethodResultFactory methodResultFactory,
         IOptions<JwtSettings> jwtSettings)
     {
@@ -44,18 +42,22 @@ public class AuthenticationService : IAuthenticationService
 
         using var hmac = new HMACSHA512();
 
-        var user = new User() 
+        var user = new User
         {
             Username = model.Username,
             Role = model.Role,
             Email = model.Email,
+            LastLoginDate = DateTime.UtcNow,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(model.Password)),
             PasswordSalt = hmac.Key
         };
 
+        _userService.RegisterWithDbRole(user.Username, model.Password, user.Role);
         await _userService.AddAsync(user);
+
+        GlobalStore.CurrentUser = user.Username;
         
-        result.Data = new AuthenticateResponse() 
+        result.Data = new AuthenticateResponse 
         {
             Username = user.Username,
             Token = GenerateToken(user)
@@ -85,7 +87,10 @@ public class AuthenticationService : IAuthenticationService
             return result;
         }
 
-        result.Data = new AuthenticateResponse() 
+        await _userService.UpdateLastLoginDateAsync(user);
+        GlobalStore.CurrentUser = user.Username;
+
+        result.Data = new AuthenticateResponse
         {
             Username = user.Username,
             Token = GenerateToken(user)
@@ -99,7 +104,7 @@ public class AuthenticationService : IAuthenticationService
         // claims help us to store info about current user
         var claims = new List<Claim>()
         {
-            new Claim(JwtRegisteredClaimNames.Name, user.Username),
+            new (JwtRegisteredClaimNames.Name, user.Username),
             new(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
             new("Role", Convert.ToString(user.Role)!)
         };
