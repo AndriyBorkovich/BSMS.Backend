@@ -7,8 +7,12 @@ using Microsoft.OpenApi.Models;
 
 namespace BSMS.API.Extensions;
 
-public static class ServicesExtensions
+internal static class ServicesExtensions
 {
+    /// <summary>
+    /// Configure Swagger OpenAPI 
+    /// </summary>
+    /// <param name="services">Extended class</param>
     public static void AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options => 
@@ -48,6 +52,11 @@ public static class ServicesExtensions
         });
     }
 
+    /// <summary>
+    /// Configure JWT authorization
+    /// </summary>
+    /// <param name="services">Extended class</param>
+    /// <param name="configuration">Configuration app settings</param>
     public static void AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();

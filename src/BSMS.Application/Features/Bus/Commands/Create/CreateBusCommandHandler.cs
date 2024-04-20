@@ -15,6 +15,7 @@ public class CreateBusCommandHandler(
     public async Task<MethodResult<CreatedEntityResponse>> Handle(CreateBusCommand request, CancellationToken cancellationToken)
     {
         var result = methodResultFactory.Create<CreatedEntityResponse>();
+        
         var bus = mapper.Map<Core.Entities.Bus>(request);
 
         await repository.InsertAsync(bus);

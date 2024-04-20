@@ -34,9 +34,7 @@ public class GetAllBusesQueryHandler(
     {
         var result = methodResultFactory.Create<ListResponse<GetAllBusesResponse>>();
 
-        var query = repository
-            .GetBusesDetails()
-            .AsNoTracking();
+        var query = repository.GetBusesDetails().AsNoTracking();
         
         if (!string.IsNullOrWhiteSpace(request.SearchedBrand))
         {

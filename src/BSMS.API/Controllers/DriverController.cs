@@ -3,6 +3,7 @@ using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Driver.Commands.Create;
 using BSMS.Application.Features.Driver.Commands.Delete;
+using BSMS.Application.Features.Driver.Queries.GetAllFromCompany;
 using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,19 @@ public class DriverController(ISender sender) : ControllerBase
     public async Task<ActionResult<MessageResponse>> Delete(int id)
     {
         var result = await sender.Send(new DeleteDriverCommand(id));
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get all drivers from specific company
+    /// </summary>
+    /// <param name="companyId">ID of company</param>
+    /// <returns>List of drivers IDs and names</returns>
+    [HttpGet("GetAllFromCompany")]
+    public async Task<ActionResult<List<GetAllDriversFromCompanyResponse>>> GetAllFromCompany(int companyId)
+    {
+        var result = await sender.Send(new GetAllDriversFromCompanyQuery(companyId));
 
         return result.DecideWhatToReturn();
     }

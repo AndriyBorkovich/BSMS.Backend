@@ -3,6 +3,7 @@ using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Route.Commands.Create;
 using BSMS.Application.Features.Route.Commands.Delete;
+using BSMS.Application.Features.Route.Queries.GetAll;
 using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,5 +40,15 @@ public class RouteController(ISender sender) : ControllerBase
         var result = await sender.Send(new DeleteRouteCommand(id));
 
         return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get all available routes
+    /// </summary>
+    /// <returns>List with route ID, origin and destination names</returns>
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<List<GetAllRoutesResponse>>> GetAll()
+    {
+        return await sender.Send(new GetAllRoutesQuery());
     }
 }

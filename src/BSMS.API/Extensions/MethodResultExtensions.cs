@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BSMS.API.Extensions;
 
-public static class MethodResultExtensions
+internal static class MethodResultExtensions
 {
     public static ObjectResult DecideWhatToReturn<T>(this MethodResult<T> result)
     {

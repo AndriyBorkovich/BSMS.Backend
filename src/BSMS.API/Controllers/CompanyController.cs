@@ -3,6 +3,7 @@ using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Company.Commands.Create;
 using BSMS.Application.Features.Company.Commands.Delete;
+using BSMS.Application.Features.Company.Queries.GetAllShortInfo;
 using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,5 +40,15 @@ public class CompanyController(ISender sender) : ControllerBase
         var result = await sender.Send(new DeleteCompanyCommand(id));
 
         return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get companies' list
+    /// </summary>
+    /// <returns>List of companies with their IDs and names</returns>
+    [HttpGet("GetAllShortInfo")]
+    public async Task<ActionResult<List<GetAllCompaniesShortInfoResponse>>> GetAll()
+    {
+        return await sender.Send(new GetAllCompaniesShortInfoQuery());
     }
 }
