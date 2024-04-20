@@ -6,7 +6,6 @@ using BSMS.Application.Features.Bus.Queries.GetAll;
 using BSMS.Application.Features.Common;
 using BSMS.Core.Enums;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BSMS.API.Controllers;
@@ -49,7 +48,7 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="query">Filtering fields</param>
     /// <returns>List with bus data, driver and company name</returns>
     [HttpGet("GetAll")]
-    public async Task<ActionResult<List<GetAllBusesResponse>>> GetAll(
+    public async Task<ActionResult<ListResponse<GetAllBusesResponse>>> GetAll(
         [FromQuery] GetAllBusesQuery query)
     {
         var result = await sender.Send(query);

@@ -4,12 +4,15 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using BSMS.Application.Extensions;
+using BSMS.Application.Features.Common;
 
 namespace BSMS.Application.Features.Bus.Queries.GetAll;
 
 public record GetAllBusesQuery(
     string? SearchedBrand,
-    string? SearchedBusNumber) : IRequest<MethodResult<List<GetAllBusesResponse>>>;
+    string? SearchedBusNumber,
+    Pagination Pagination) : IRequest<MethodResult<ListResponse<GetAllBusesResponse>>>;
 
 public record GetAllBusesResponse(
     int BusId,
@@ -24,11 +27,12 @@ public class GetAllBusesQueryHandler(
         IBusRepository repository,
         ILogger<GetAllBusesQuery> logger,
         MethodResultFactory methodResultFactory) 
-    : IRequestHandler<GetAllBusesQuery, MethodResult<List<GetAllBusesResponse>>>
+    : IRequestHandler<GetAllBusesQuery, MethodResult<ListResponse<GetAllBusesResponse>>>
 {
-    public async Task<MethodResult<List<GetAllBusesResponse>>> Handle(GetAllBusesQuery request, CancellationToken cancellationToken)
+    public async Task<MethodResult<ListResponse<GetAllBusesResponse>>> Handle(
+        GetAllBusesQuery request, CancellationToken cancellationToken)
     {
-        var result = methodResultFactory.Create<List<GetAllBusesResponse>>();
+        var result = methodResultFactory.Create<ListResponse<GetAllBusesResponse>>();
 
         var query = repository
             .GetBusesDetails()
@@ -44,8 +48,11 @@ public class GetAllBusesQueryHandler(
             query = query.Where(b => b.Number.StartsWith(request.SearchedBusNumber));
         }
         
-        result.Data = await query.ProjectToType<GetAllBusesResponse>().ToListAsync(cancellationToken);
-        
+        var (busesList, total) = await query.ProjectToType<GetAllBusesResponse>()
+                                            .Page(request.Pagination);
+
+        result.Data = new ListResponse<GetAllBusesResponse>(busesList, total);
+
         return result;
     }
 }

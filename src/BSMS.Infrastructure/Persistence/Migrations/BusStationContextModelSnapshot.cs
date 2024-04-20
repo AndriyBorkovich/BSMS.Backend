@@ -50,7 +50,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("DriverId");
 
-                    b.ToTable("Buses");
+                    b.ToTable("Buses", (string)null);
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
@@ -97,7 +97,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PassengerId");
 
-                    b.ToTable("BusReviews");
+                    b.ToTable("BusReviews", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.BusScheduleEntry", b =>
@@ -136,7 +136,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RouteId");
 
-                    b.ToTable("BusScheduleEntries");
+                    b.ToTable("BusScheduleEntries", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Company", b =>
@@ -167,7 +167,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Driver", b =>
@@ -199,7 +199,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Drivers");
+                    b.ToTable("Drivers", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Passenger", b =>
@@ -230,7 +230,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("PassengerId");
 
-                    b.ToTable("Passengers");
+                    b.ToTable("Passengers", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Route", b =>
@@ -253,7 +253,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("RouteId");
 
-                    b.ToTable("Routes");
+                    b.ToTable("Routes", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Seat", b =>
@@ -277,7 +277,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("BusId");
 
-                    b.ToTable("Seats");
+                    b.ToTable("Seats", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Stop", b =>
@@ -305,7 +305,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RouteId");
 
-                    b.ToTable("Stops");
+                    b.ToTable("Stops", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.Ticket", b =>
@@ -339,7 +339,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("StartStopId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
@@ -378,7 +378,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TripId");
 
-                    b.ToTable("TicketPayments");
+                    b.ToTable("TicketPayments", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.TicketStatus", b =>
@@ -404,7 +404,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("TicketStatuses");
+                    b.ToTable("TicketStatuses", (string)null);
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
@@ -430,7 +430,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("BusScheduleEntryId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.TripStatus", b =>
@@ -456,7 +456,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TripId");
 
-                    b.ToTable("TripStatuses");
+                    b.ToTable("TripStatuses", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Entities.User", b =>
@@ -493,7 +493,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BSMS.Core.Views.BusDetailsView", b =>
