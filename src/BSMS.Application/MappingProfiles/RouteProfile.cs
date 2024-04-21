@@ -1,4 +1,5 @@
 ﻿using BSMS.Application.Features.Route.Commands.Create;
+using BSMS.Application.Features.Route.Queries.GetAll;
 using BSMS.Core.Entities;
 using Mapster;
 
@@ -21,5 +22,8 @@ public class RouteProfile : IRegister
                     }
                 }
             });
+
+        config.NewConfig<Route, GetAllRoutesResponse>()
+            .Map(dest => dest.Name, src => $"{src.Origin} - {src.Destination}");
     }
 }

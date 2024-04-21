@@ -11,5 +11,9 @@ public class BusProfile : IRegister
     {
         config.NewConfig<CreateBusCommand, Bus>()
             .Map(dest => dest.BusScheduleEntries, src => src.BusScheduleEntries);
+
+        config.NewConfig<CreateBusSchedule, BusScheduleEntry>()
+            .Map(dest => dest.Day, src => src.DayOfWeek)
+            .Map(dest => dest.MoveDirection, src => src.MoveDirection);
     }
 }

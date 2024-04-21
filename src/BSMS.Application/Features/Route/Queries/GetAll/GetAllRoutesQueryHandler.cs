@@ -8,8 +8,7 @@ public record GetAllRoutesQuery() : IRequest<List<GetAllRoutesResponse>>;
 
 public record GetAllRoutesResponse(
     int RouteId,
-    string Origin,
-    string Destination
+    string Name
 );
 
 public class GetAllRoutesQueryHandler(
