@@ -9,11 +9,15 @@ public static class PaginationExtensions
     {
         var count = await query.CountAsync();
 
-        var items = await query
-                        .Skip((pagination.PageNumber - 1) * pagination.PageSize)
-                        .Take(pagination.PageSize)
-                        .ToListAsync();
+        var (from, to) = GetFromToParams(pagination);
+
+        var items = await query.Skip(from).Take(to).ToListAsync();
 
         return (items, count);
+    }
+
+    public static (int From, int To) GetFromToParams(Pagination pagination) 
+    {
+        return ((pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize);
     }
 }

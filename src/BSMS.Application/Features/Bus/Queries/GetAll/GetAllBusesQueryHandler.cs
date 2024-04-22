@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using BSMS.Application.Extensions;
 using BSMS.Application.Features.Common;
+using LinqKit;
+using BSMS.Core.Views;
+using BSMS.Application.Contracts.Caching;
 
 namespace BSMS.Application.Features.Bus.Queries.GetAll;
 
@@ -26,7 +29,8 @@ public record GetAllBusesResponse(
 public class GetAllBusesQueryHandler(
         IBusRepository repository,
         ILogger<GetAllBusesQuery> logger,
-        MethodResultFactory methodResultFactory) 
+        ICacheService<ListResponse<GetAllBusesResponse>> cacheService,
+        MethodResultFactory methodResultFactory)
     : IRequestHandler<GetAllBusesQuery, MethodResult<ListResponse<GetAllBusesResponse>>>
 {
     public async Task<MethodResult<ListResponse<GetAllBusesResponse>>> Handle(
@@ -34,23 +38,57 @@ public class GetAllBusesQueryHandler(
     {
         var result = methodResultFactory.Create<ListResponse<GetAllBusesResponse>>();
 
+        result.Data = await TryGetFromCacheAsync(request, cancellationToken);
+
+        return result;
+    }
+
+    private async Task<ListResponse<GetAllBusesResponse>> TryGetFromCacheAsync(
+        GetAllBusesQuery request, CancellationToken cancellationToken)
+    {
+        var key = GetKey(request);
+        var cachedBuses = await cacheService.GetRecordAsync(key, cancellationToken);
+
+        if (cachedBuses is not null)
+        {
+            return cachedBuses;
+        }
+
         var query = repository.GetBusesDetails().AsNoTracking();
+
+        var filters = SetUpFilters(request);
+
+        var (busesList, total) = await query.Where(filters)
+                                            .ProjectToType<GetAllBusesResponse>()
+                                            .Page(request.Pagination);
+
+        var result = new ListResponse<GetAllBusesResponse>(busesList, total);
+
+        await cacheService.SetRecordAsync(key, result, cancellationToken: cancellationToken);
+
+        return result;
+    }
+
+    private static string GetKey(GetAllBusesQuery request)
+    {
+        var (from, to) = PaginationExtensions.GetFromToParams(request.Pagination);
         
+        return $"{CachePrefixConstants.BusesKey}({from}-{to})_{request.SearchedBrand}_{request.SearchedBusNumber}";
+    }
+
+    private static ExpressionStarter<BusDetailsView> SetUpFilters(GetAllBusesQuery request)
+    {
+        var filters = PredicateBuilder.New<BusDetailsView>(true);
         if (!string.IsNullOrWhiteSpace(request.SearchedBrand))
         {
-            query = query.Where(b => b.Brand.StartsWith(request.SearchedBrand));
+            filters = filters.Or(b => b.Brand.StartsWith(request.SearchedBrand));
         }
 
         if (!string.IsNullOrWhiteSpace(request.SearchedBusNumber))
         {
-            query = query.Where(b => b.Number.StartsWith(request.SearchedBusNumber));
+            filters = filters.Or(b => b.Number.StartsWith(request.SearchedBusNumber));
         }
-        
-        var (busesList, total) = await query.ProjectToType<GetAllBusesResponse>()
-                                            .Page(request.Pagination);
 
-        result.Data = new ListResponse<GetAllBusesResponse>(busesList, total);
-
-        return result;
+        return filters;
     }
 }

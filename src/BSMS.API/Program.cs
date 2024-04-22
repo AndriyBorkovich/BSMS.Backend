@@ -33,12 +33,13 @@ builder.Services.AddProblemDetails(options =>
         ctx.ProblemDetails.Extensions.Add("instance", $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
     }
 );
-
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.AddRedisCaching(builder.Configuration);
+
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
-builder.Services.AddMemoryCache();
 builder.Services.AddJwtAuth(builder.Configuration);
+
 builder.Services.AddPersistenceServices(builder.Configuration)
                 .AddApplicationServices()
                 .AddCustomIdentityServices();

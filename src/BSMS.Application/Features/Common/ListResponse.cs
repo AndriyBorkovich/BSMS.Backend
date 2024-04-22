@@ -11,7 +11,7 @@ public class ListResponse<TResult>
     }
 
     [Required]
-    public List<TResult> Result { get; }
+    public List<TResult> Result { get; set; }
     [Required]
-    public int Total { get; }
+    public int Total { get; set; }
 }
