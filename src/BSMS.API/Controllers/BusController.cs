@@ -2,6 +2,7 @@
 using BSMS.API.Filters;
 using BSMS.Application.Features.Bus.Commands.Create;
 using BSMS.Application.Features.Bus.Commands.Delete;
+using BSMS.Application.Features.Bus.Commands.Edit;
 using BSMS.Application.Features.Bus.Queries.GetAll;
 using BSMS.Application.Features.Common;
 using BSMS.Core.Enums;
@@ -38,6 +39,19 @@ public class BusController(ISender sender) : ControllerBase
     public async Task<ActionResult<MessageResponse>> Delete(int id)
     {
         var result = await sender.Send(new DeleteBusCommand(id));
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Edit existing bus data
+    /// </summary>
+    /// <param name="command">Contains edited bus ID, new brand, number, capacity values</param>
+    /// <returns>Message of action result</returns>
+    [HttpPost("Edit")]
+    public async Task<ActionResult<MessageResponse>> Edit(EditBusCommand command)
+    {
+        var result = await sender.Send(command);
 
         return result.DecideWhatToReturn();
     }
