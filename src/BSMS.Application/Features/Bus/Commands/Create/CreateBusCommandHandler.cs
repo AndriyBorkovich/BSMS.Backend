@@ -1,4 +1,5 @@
-﻿using BSMS.Application.Contracts.Persistence;
+﻿using BSMS.Application.Contracts.Caching;
+using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Extensions;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
@@ -12,6 +13,7 @@ public class CreateBusCommandHandler(
         IBusRepository repository, 
         IMapper mapper,
         IValidator<CreateBusCommand> validator,
+        ICacheService cacheService,
         MethodResultFactory methodResultFactory)
     : IRequestHandler<CreateBusCommand, MethodResult<CreatedEntityResponse>>
 {
@@ -19,7 +21,7 @@ public class CreateBusCommandHandler(
     {
         var result = methodResultFactory.Create<CreatedEntityResponse>();
         
-        var validationResult = await validator.ValidateAsync(request);
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if(!validationResult.IsValid)
         {
             result.SetError(validationResult.Errors.ToResponse(), System.Net.HttpStatusCode.BadRequest);
@@ -29,6 +31,8 @@ public class CreateBusCommandHandler(
         var bus = mapper.Map<Core.Entities.Bus>(request);
 
         await repository.InsertAsync(bus);
+
+        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.BusesKey, cancellationToken);
         
         result.Data = new CreatedEntityResponse(bus.BusId);
         

@@ -29,7 +29,7 @@ public record GetAllBusesResponse(
 public class GetAllBusesQueryHandler(
         IBusRepository repository,
         ILogger<GetAllBusesQuery> logger,
-        ICacheService<ListResponse<GetAllBusesResponse>> cacheService,
+        ICacheService cacheService,
         MethodResultFactory methodResultFactory)
     : IRequestHandler<GetAllBusesQuery, MethodResult<ListResponse<GetAllBusesResponse>>>
 {
@@ -47,10 +47,11 @@ public class GetAllBusesQueryHandler(
         GetAllBusesQuery request, CancellationToken cancellationToken)
     {
         var key = GetKey(request);
-        var cachedBuses = await cacheService.GetRecordAsync(key, cancellationToken);
+        var cachedBuses = await cacheService.GetRecordAsync<ListResponse<GetAllBusesResponse>>(key, cancellationToken);
 
         if (cachedBuses is not null)
         {
+            logger.LogInformation("Got buses list from cache");
             return cachedBuses;
         }
 
@@ -64,15 +65,21 @@ public class GetAllBusesQueryHandler(
 
         var result = new ListResponse<GetAllBusesResponse>(busesList, total);
 
-        await cacheService.SetRecordAsync(key, result, cancellationToken: cancellationToken);
+        await cacheService.SetRecordAsync(
+            key,
+            result,
+            absoluteExpireTime: TimeSpan.FromMinutes(10),
+            cancellationToken: cancellationToken);
+
+        logger.LogInformation("Got buses list from DB and cached it");
 
         return result;
     }
 
     private static string GetKey(GetAllBusesQuery request)
     {
-        var (from, to) = PaginationExtensions.GetFromToParams(request.Pagination);
-        
+        var (from, to) = PaginationExtensions.GetFromAndToParams(request.Pagination);
+
         return $"{CachePrefixConstants.BusesKey}({from}-{to})_{request.SearchedBrand}_{request.SearchedBusNumber}";
     }
 

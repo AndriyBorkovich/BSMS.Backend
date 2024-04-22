@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BSMS.API.Controllers;
+/// <inheritdoc />
 [ApiController]
 [Route("api/[controller]")]
 [Authorization(Role.Admin)]

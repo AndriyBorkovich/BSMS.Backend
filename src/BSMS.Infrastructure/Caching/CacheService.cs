@@ -2,16 +2,16 @@ using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using BSMS.Application.Contracts.Caching;
 using System.Collections.Concurrent;
-using LinqKit;
+using StackExchange.Redis;
 
 namespace BSMS.Infrastructure.Caching;
 
-public class CacheService<T>(IDistributedCache cache) : ICacheService<T>
-    where T : class
+public class CacheService(IDistributedCache cache, IConnectionMultiplexer connectionMultiplexer) : ICacheService
 {
     private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
 
-    public async Task SetRecordAsync(string key, T data, TimeSpan? absoluteExpireTime = null, TimeSpan? slidingExpireTime = null, CancellationToken cancellationToken = default)
+    public async Task SetRecordAsync<T>(string key, T data, TimeSpan? absoluteExpireTime = null, TimeSpan? slidingExpireTime = null, CancellationToken cancellationToken = default)
+        where T: class
     {
         var options = new DistributedCacheEntryOptions
         {
@@ -25,15 +25,17 @@ public class CacheService<T>(IDistributedCache cache) : ICacheService<T>
         CacheKeys.TryAdd(key, false);
     }
 
-    public async Task<T?> GetRecordAsync(string key, CancellationToken cancellationToken = default)
+    public async Task<T?> GetRecordAsync<T>(string key, CancellationToken cancellationToken = default)
+        where T: class
     {
-        var jsonData = await cache.GetStringAsync(key);
+        var jsonData = await cache.GetStringAsync(key, cancellationToken);
 
         if (jsonData is null)
         {
             return default;
         }
 
+        CacheKeys.TryAdd(key, false);
         return JsonSerializer.Deserialize<T>(jsonData);
     }
 
@@ -51,5 +53,23 @@ public class CacheService<T>(IDistributedCache cache) : ICacheService<T>
                                     .Select(k => RemoveRecordAsync(k, cancellationToken));
 
         await Task.WhenAll(tasks);
+    }
+
+    /// <summary>
+    /// deletes all keys and their values from cache store
+    /// </summary>
+    /// <returns></returns>
+    public async Task<bool> DeleteAllKeys() 
+    {
+        if (connectionMultiplexer.IsConnected)
+        {
+            var server = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints().First());
+
+            await server.FlushAllDatabasesAsync();
+
+            return true;
+        }
+
+        return false;
     }
 }

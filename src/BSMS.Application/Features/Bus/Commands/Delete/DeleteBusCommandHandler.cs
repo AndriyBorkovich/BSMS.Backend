@@ -11,7 +11,7 @@ public record DeleteBusCommand(int Id) : IRequest<MethodResult<MessageResponse>>
 
 public class DeleteBusCommandHandler(
     IBusRepository repository,
-    ICacheService<MessageResponse> cacheService,
+    ICacheService cacheService,
     MethodResultFactory methodResultFactory) 
         : IRequestHandler<DeleteBusCommand, MethodResult<MessageResponse>>
 {

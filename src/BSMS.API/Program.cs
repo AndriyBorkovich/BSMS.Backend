@@ -6,6 +6,7 @@ using BSMS.API.Middlewares;
 using BSMS.Infrastructure.Authorization;
 using Serilog;
 using Microsoft.AspNetCore.HttpLogging;
+using BSMS.API.BackgroundJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,10 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 {
     loggerConfig.ReadFrom.Configuration(context.Configuration);
 });
+
+builder.Services.AddLogging(loggingBuilder =>
+    loggingBuilder.AddSerilog(dispose: true));
+
 builder.Services.AddHttpLogging(logging =>
 {
     logging.LoggingFields = HttpLoggingFields.All;
@@ -44,6 +49,7 @@ builder.Services.AddPersistenceServices(builder.Configuration)
                 .AddApplicationServices()
                 .AddCustomIdentityServices();
 
+builder.Services.AddHostedService<CacheCleaningJob>();
 
 builder.Services.AddCors(options =>
 {
