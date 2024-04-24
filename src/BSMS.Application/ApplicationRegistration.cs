@@ -5,6 +5,7 @@ using BSMS.Application.Features.BusReview.Commands.Create;
 using BSMS.Application.Features.Company.Commands.Create;
 using BSMS.Application.Features.Driver.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Create;
+using BSMS.Application.Features.Passenger.Commands.Edit;
 using BSMS.Application.Features.Route.Commands.Create;
 using BSMS.Application.Features.Ticket.Commands.Create;
 using BSMS.Application.Helpers;
@@ -44,5 +45,6 @@ public static class ApplicationRegistration
         services.AddScoped<IValidator<CreateBusReviewCommand>, CreateBusReviewCommandValidator>();
         services.AddScoped<IValidator<CreateTicketCommand>, CreateTicketCommandValidator>();
         services.AddScoped<IValidator<EditBusCommand>, EditBusCommandValidator>();
+        services.AddScoped<IValidator<EditPassengerCommand>, EditPassengerCommandValidator>();
     }
 }

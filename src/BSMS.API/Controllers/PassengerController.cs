@@ -3,6 +3,7 @@ using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Delete;
+using BSMS.Application.Features.Passenger.Commands.Edit;
 using BSMS.Application.Features.Passenger.Queries.GetAll;
 using BSMS.Core.Enums;
 using MediatR;
@@ -43,12 +44,25 @@ public class PassengerController(ISender sender) : ControllerBase
     }
 
     /// <summary>
+    /// Edit existing passenger
+    /// </summary>
+    /// <param name="command">Passenger's new data</param>
+    /// <returns>Message of action result</returns>
+    [HttpPost("Edit")]
+    public async Task<ActionResult<MessageResponse>> Edit(EditPassengerCommand command)
+    {
+        var result = await sender.Send(command);
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
     /// Get all passengers
     /// </summary>
-    /// <param name="query">Filtering fields</param>
+    /// <param name="query">Filtering fields and pagination params</param>
     /// <returns>List with passengers' data: full name, phone, email</returns>
     [HttpGet("GetAll")]
-    public async Task<ActionResult<List<GetAllPassengersResponse>>> GetAll(
+    public async Task<ActionResult<ListResponse<GetAllPassengersResponse>>> GetAll(
         [FromQuery] GetAllPassengersQuery query)
     {
         var result = await sender.Send(query);

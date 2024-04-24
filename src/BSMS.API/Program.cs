@@ -31,13 +31,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
 
 // exceptions handling
-builder.Services.AddProblemDetails(options =>
-    options.CustomizeProblemDetails = ctx =>
-    {
-        ctx.ProblemDetails.Extensions.Add("trace-id", ctx.HttpContext.TraceIdentifier);
-        ctx.ProblemDetails.Extensions.Add("instance", $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
-    }
-);
+builder.Services.AddCustomizedProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddRedisCaching(builder.Configuration);

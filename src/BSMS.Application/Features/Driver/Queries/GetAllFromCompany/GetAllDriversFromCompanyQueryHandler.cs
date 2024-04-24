@@ -12,6 +12,7 @@ public record GetAllDriversFromCompanyQuery(int CompanyId)
 public record GetAllDriversFromCompanyResponse(
     int DriverId,
     string Name);
+
 public class GetAllDriversFromCompanyQueryHandler(
     IDriverRepository driverRepository,
     ICompanyRepository companyRepository,
