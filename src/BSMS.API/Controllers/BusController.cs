@@ -14,7 +14,6 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc />
 [Route("/api/[controller]")]
 [ApiController]
-[Authorization(Role.Admin)]
 public class BusController(ISender sender) : ControllerBase
 {
     /// <summary>
@@ -23,6 +22,7 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="command">Bus data and its schedule data</param>
     /// <returns>ID of the created bus</returns>
     [HttpPost("Create")]
+    [Authorization(Role.Admin)]
     public async Task<ActionResult<CreatedEntityResponse>> Create(CreateBusCommand command)
     {
         var result = await sender.Send(command);
@@ -36,6 +36,7 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="id">ID of the bus</param>
     /// <returns>Message of action result</returns>
     [HttpDelete("Delete/{id}")]
+    [Authorization(Role.Admin)]
     public async Task<ActionResult<MessageResponse>> Delete(int id)
     {
         var result = await sender.Send(new DeleteBusCommand(id));
@@ -49,6 +50,7 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="command">Contains edited bus ID, new brand, number, capacity values</param>
     /// <returns>Message of action result</returns>
     [HttpPost("Edit")]
+    [Authorization(Role.Admin)]
     public async Task<ActionResult<MessageResponse>> Edit(EditBusCommand command)
     {
         var result = await sender.Send(command);
@@ -62,6 +64,7 @@ public class BusController(ISender sender) : ControllerBase
     /// <param name="query">Filtering fields and pagination params</param>
     /// <returns>List with bus data, driver and company name</returns>
     [HttpGet("GetAll")]
+    [Authorization(Role.Admin, Role.Passenger)]
     public async Task<ActionResult<ListResponse<GetAllBusesResponse>>> GetAll(
         [FromQuery] GetAllBusesQuery query)
     {

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using BSMS.Application.Contracts.Caching;
 using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
@@ -10,6 +11,7 @@ public record DeleteDriverCommand(int Id) : IRequest<MethodResult<MessageRespons
 
 public class DeleteDriverCommandHandler(
         IDriverRepository repository,
+        ICacheService cacheService,
         MethodResultFactory methodResultFactory)
     : IRequestHandler<DeleteDriverCommand, MethodResult<MessageResponse>>
 {
@@ -25,6 +27,10 @@ public class DeleteDriverCommandHandler(
         }
 
         await repository.DeleteAsync(driver);
+
+        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.DriversKey, cancellationToken);
+
+        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.BusesKey, cancellationToken);
 
         result.Data = new MessageResponse("Driver was successfully deleted");
         
