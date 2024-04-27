@@ -88,12 +88,12 @@ public class GetAllBusesQueryHandler(
         var filters = PredicateBuilder.New<BusDetailsView>(true);
         if (!string.IsNullOrWhiteSpace(request.SearchedBrand))
         {
-            filters = filters.Or(b => b.Brand.StartsWith(request.SearchedBrand));
+            filters = filters.And(b => b.Brand.StartsWith(request.SearchedBrand));
         }
 
         if (!string.IsNullOrWhiteSpace(request.SearchedBusNumber))
         {
-            filters = filters.Or(b => b.Number.StartsWith(request.SearchedBusNumber));
+            filters = filters.And(b => b.Number.StartsWith(request.SearchedBusNumber));
         }
 
         return filters;

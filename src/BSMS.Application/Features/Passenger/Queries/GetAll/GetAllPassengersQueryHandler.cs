@@ -94,12 +94,12 @@ public class GetAllPassengersQueryHandler(
         var filters = PredicateBuilder.New<Core.Entities.Passenger>(true);
         if (!string.IsNullOrWhiteSpace(request.SearchedFirstName))
         {
-            filters = filters.Or(p => p.FirstName.StartsWith(request.SearchedFirstName));
+            filters = filters.And(p => p.FirstName.StartsWith(request.SearchedFirstName));
         }
 
         if (!string.IsNullOrWhiteSpace(request.SearchedLastName))
         {
-            filters = filters.Or(p => p.LastName.StartsWith(request.SearchedLastName));
+            filters = filters.And(p => p.LastName.StartsWith(request.SearchedLastName));
         }
 
         return filters;
