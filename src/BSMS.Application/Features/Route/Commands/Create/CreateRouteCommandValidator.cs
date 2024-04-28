@@ -16,18 +16,16 @@ public class CreateRouteCommandValidator : AbstractValidator<CreateRouteCommand>
         
         RuleFor(command => command)
             .Must(HaveValidPath)
-            .WithMessage("Invalid path for stops list.");
+            .WithMessage("Invalid path for stops list. First and last stop is determined by origin and destination of route");
     }
 
     private static bool HaveValidPath(CreateRouteCommand routeCommand)
     {
         var stops = routeCommand.StopsList;
-        if (stops.Count < 2)
-            return false;
-
-        if (stops[0].Name != routeCommand.Origin)
+        
+        if (stops[0].Name == routeCommand.Origin)
             return false;
         
-        return stops[^1].Name == routeCommand.Destination;
+        return stops[0].Name != routeCommand.Origin && stops[^1].Name != routeCommand.Destination;
     }
 }
