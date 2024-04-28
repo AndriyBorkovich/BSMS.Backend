@@ -26,7 +26,7 @@ public static class RedisRegistration
         }
         else
         {
-            // injecting service which simulates cache works (literraly it doesn't do anything)
+            // injecting service which simulates cache work (literraly it doesn't do anything)
             services.AddSingleton<ICacheService, FakeCacheService>();
         }
     }
