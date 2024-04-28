@@ -13,13 +13,21 @@ public static class RedisRegistration
         var connectionString = configuration.GetConnectionString("Redis");
         
         var multiplexer = ConnectionMultiplexer.Connect(connectionString);
-        services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+        
+        if(multiplexer.IsConnected)
+        {
+            services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
-        services.AddStackExchangeRedisCache(redisOptions => {
-            var connection = connectionString;
-            redisOptions.Configuration = connection;
-        });
+            services.AddStackExchangeRedisCache(redisOptions => {
+                redisOptions.Configuration = connectionString;
+            });
 
-        services.AddSingleton<ICacheService, CacheService>();
+            services.AddSingleton<ICacheService, CacheService>();
+        }
+        else
+        {
+            // injecting service which simulates cache works (literraly it doesn't do anything)
+            services.AddSingleton<ICacheService, FakeCacheService>();
+        }
     }
 }
