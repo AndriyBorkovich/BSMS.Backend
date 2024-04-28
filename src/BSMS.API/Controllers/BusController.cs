@@ -62,7 +62,7 @@ public class BusController(ISender sender) : ControllerBase
     /// Get all buses
     /// </summary>
     /// <param name="query">Filtering fields and pagination params</param>
-    /// <returns>List with bus data, driver and company name</returns>
+    /// <returns>List with bus data, driver and company name and total count</returns>
     [HttpGet("GetAll")]
     [Authorization(Role.Admin, Role.Passenger)]
     public async Task<ActionResult<ListResponse<GetAllBusesResponse>>> GetAll(

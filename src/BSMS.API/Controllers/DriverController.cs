@@ -71,10 +71,10 @@ public class DriverController(ISender sender) : ControllerBase
     }
 
     /// <summary>
-    /// Get all drivers info
+    /// Get all drivers full info
     /// </summary>
     /// <param name="query">Filtering fields and pagination params</param>
-    /// <returns>List with drivers data, company name, </returns>
+    /// <returns>List with drivers data and total count</returns>
     [HttpGet("GetAll")]
     public async Task<ActionResult<ListResponse<GetAllDriversResponse>>> GetAll(
         [FromQuery] GetAllDriversQuery query

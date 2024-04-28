@@ -11,9 +11,12 @@ namespace BSMS.Application.Features.Company.Commands.Create;
 
 public record CreateCompanyCommand(
     string Name,
-    string Address,
     string Phone,
-    string Email) : IRequest<MethodResult<CreatedEntityResponse>>;
+    string Email,
+    string Street,
+    string City,
+    string Country,
+    string ZipCode) : IRequest<MethodResult<CreatedEntityResponse>>;
 
 public class CreateCompanyCommandHandler(
     ICompanyRepository repository,

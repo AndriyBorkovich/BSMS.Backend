@@ -4,7 +4,6 @@ using BSMS.Application.Features.BusReview.Commands.Create;
 using BSMS.Application.Features.Common;
 using BSMS.Core.Enums;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BSMS.API.Controllers;
@@ -12,7 +11,7 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc />
 [Route("/api/[controller]")]
 [ApiController]
-[Authorization(Role.Passenger)]
+[Authorization(Role.Passenger, Role.Admin)]
 public class BusReviewController(ISender sender) : ControllerBase
 {
     /// <summary>

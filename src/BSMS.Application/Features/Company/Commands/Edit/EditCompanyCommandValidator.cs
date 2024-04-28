@@ -1,20 +1,29 @@
-﻿using BSMS.Application.Helpers;
+﻿using BSMS.Application.Contracts.Persistence;
+using BSMS.Application.Features.Company.Commands.Edit;
+using BSMS.Application.Helpers;
 using FluentValidation;
 
-namespace BSMS.Application.Features.Company.Commands.Create;
+namespace BSMS.Application;
 
-public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyCommand>
+public class EditCompanyCommandValidator : AbstractValidator<EditCompanyCommand>
 {
-    public CreateCompanyCommandValidator()
+    private readonly ICompanyRepository _companyRepository;
+    public EditCompanyCommandValidator(ICompanyRepository companyRepository)
     {
+        _companyRepository = companyRepository;
+
+        RuleFor(c => c.CompanyId)
+            .MustAsync(async (id, _) => await _companyRepository.AnyAsync(c => c.CompanyId == id))
+            .WithMessage("Choosen company must exist!");
+
         RuleFor(c => c.Name)
             .NotEmpty()
             .NotNull()
             .Length(3, 50)
             .Matches(RegexConstants.LettersOnly)
             .WithMessage("{PropertyName} must consist only from letters");
-        
-         RuleFor(c => c.Street)
+
+        RuleFor(c => c.Street)
            .NotEmpty()
            .NotNull()
            .Length(5, 50)
@@ -41,7 +50,7 @@ public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyComm
             .Length(5, 10)
             .Matches(RegexConstants.ZipCode)
             .WithMessage("{PropertyName} is invalid");
-        
+
         RuleFor(c => c.Phone)
             .NotEmpty()
             .Matches(RegexConstants.PhoneNumber)

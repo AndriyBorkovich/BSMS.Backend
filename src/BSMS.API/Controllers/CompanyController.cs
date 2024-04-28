@@ -3,6 +3,8 @@ using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Company.Commands.Create;
 using BSMS.Application.Features.Company.Commands.Delete;
+using BSMS.Application.Features.Company.Commands.Edit;
+using BSMS.Application.Features.Company.Queries.GetAll;
 using BSMS.Application.Features.Company.Queries.GetAllShortInfo;
 using BSMS.Core.Enums;
 using MediatR;
@@ -43,12 +45,39 @@ public class CompanyController(ISender sender) : ControllerBase
     }
 
     /// <summary>
-    /// Get companies' list
+    /// Edit existing company's data
+    /// </summary>
+    /// <param name="command">Contains edited company ID, new name, address, phone, email values</param>
+    /// <returns>Message of action result</returns>
+    [HttpPost("Edit")]
+    public async Task<ActionResult<MessageResponse>> Edit(EditCompanyCommand command)
+    {
+        var result = await sender.Send(command);
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get companies' short info list
     /// </summary>
     /// <returns>List of companies with their IDs and names</returns>
     [HttpGet("GetAllShortInfo")]
-    public async Task<ActionResult<List<GetAllCompaniesShortInfoResponse>>> GetAll()
+    public async Task<ActionResult<List<GetAllCompaniesShortInfoResponse>>> GetAllShortInfo()
     {
         return await sender.Send(new GetAllCompaniesShortInfoQuery());
+    }
+
+    /// <summary>
+    /// Get all companies full info
+    /// </summary>
+    /// <param name="query">Contains filtering fields and pagination data</param>
+    /// <returns>List of each company data and total count</returns>
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<ListResponse<GetAllCompaniesResponse>>> GetAll(
+        [FromQuery] GetAllCompaniesQuery query)
+    {
+        var result = await sender.Send(query);
+
+        return result.DecideWhatToReturn();
     }
 }
