@@ -1,4 +1,3 @@
-using BSMS.Application.Contracts.Caching;
 using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Extensions;
 using BSMS.Application.Features.Common;
@@ -18,7 +17,6 @@ public class EditBusCommandHandler(
     IBusRepository repository,
     IMapper mapper,
     IValidator<EditBusCommand> validator,
-    ICacheService cacheService,
     MethodResultFactory methodResultFactory) 
         : IRequestHandler<EditBusCommand, MethodResult<MessageResponse>>
 {
@@ -38,8 +36,6 @@ public class EditBusCommandHandler(
         mapper.Map<EditBusCommand, Core.Entities.Bus>(request, bus);
 
         await repository.UpdateAsync(bus);
-
-        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.BusesKey, cancellationToken);
 
         result.Data = new MessageResponse("Bus was edited successfully");
 

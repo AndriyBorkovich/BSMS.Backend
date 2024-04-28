@@ -1,9 +1,7 @@
-using BSMS.Application.Contracts.Caching;
 using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Extensions;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
-using BSMS.Core.Entities;
 using FluentValidation;
 using MapsterMapper;
 using MediatR;
@@ -21,7 +19,6 @@ public class EditPassengerCommandHandler(
     IPassengerRepository repository,
     IMapper mapper,
     IValidator<EditPassengerCommand> validator,
-    ICacheService cacheService,
     MethodResultFactory methodResultFactory)
         : IRequestHandler<EditPassengerCommand, MethodResult<MessageResponse>>
 {
@@ -41,8 +38,6 @@ public class EditPassengerCommandHandler(
         mapper.Map<EditPassengerCommand, Core.Entities.Passenger>(request, passenger);
 
         await repository.UpdateAsync(passenger);
-
-        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.PassengersKey, cancellationToken);
 
         result.Data = new MessageResponse($"Passenger with ID {request.PassengerId} was edited successfully");
 

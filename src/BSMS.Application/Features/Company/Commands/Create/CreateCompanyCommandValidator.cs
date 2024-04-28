@@ -14,6 +14,13 @@ public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyComm
             .Matches(RegexConstants.LettersOnly)
             .WithMessage("{PropertyName} must consist only from letters");
         
+         RuleFor(c => c.Address)
+            .NotEmpty()
+            .NotNull()
+            .Length(5, 100)
+            .Matches(RegexConstants.Address)
+            .WithMessage("{PropertyName} is invalid adress");
+        
         RuleFor(c => c.Phone)
             .NotEmpty()
             .Matches(RegexConstants.PhoneNumber)

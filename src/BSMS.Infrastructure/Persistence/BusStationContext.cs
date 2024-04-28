@@ -44,6 +44,10 @@ public class BusStationContext : DbContext
             .ToTable(tb => tb.UseSqlOutputClause(false));
         modelBuilder.Entity<TicketStatus>()
             .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Route>()
+            .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Stop>()
+            .ToTable(tb => tb.UseSqlOutputClause(false));
         
         modelBuilder.Entity<Stop>()
             .HasMany(s => s.TicketStartStops)
@@ -103,7 +107,7 @@ public class BusStationContext : DbContext
         
         modelBuilder.HasDbFunction(
                 typeof(BusStationContext).GetMethod(nameof(StopsBelongToSameRoute),
-                new[] { typeof(int), typeof(int) })!)
+                [typeof(int), typeof(int)])!)
             .HasName("StopsBelongToSameRoute");
     }
 }

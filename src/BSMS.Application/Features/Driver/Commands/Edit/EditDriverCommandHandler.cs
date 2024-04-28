@@ -41,7 +41,7 @@ public class EditDriverCommandHandler(
 
         await repository.UpdateAsync(driver);
 
-        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.DriversKey, cancellationToken);
+        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.BusesKey, cancellationToken);
 
         result.Data = new MessageResponse($"Driver with ID {request.DriverId} was edited successfully");
 

@@ -2,6 +2,7 @@
 using BSMS.Infrastructure.Persistence;
 using BSMS.Infrastructure.Persistence.Interceptors;
 using BSMS.Infrastructure.Persistence.Repositories;
+using BSMS.Infrastructure.Persistence.Triggers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,15 @@ public static class PersistenceRegistration
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"))
                 .LogTo(Log.Logger.Information, LogLevel.Information)
                 .AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migration
+            
+            opt.UseTriggers(configuration => 
+            {
+                configuration.AddTrigger<BusChangeTrigger>();
+                configuration.AddTrigger<DriverChangeTrigger>();
+                configuration.AddTrigger<PassengerChangeTrigger>();
+                configuration.AddTrigger<CompanyChangeTrigger>();
+            });
+
             opt.EnableDetailedErrors();
             opt.EnableSensitiveDataLogging();
         });

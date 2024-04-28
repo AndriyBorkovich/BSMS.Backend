@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using BSMS.Application.Contracts.Caching;
 using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
@@ -11,7 +10,6 @@ public record DeleteBusCommand(int Id) : IRequest<MethodResult<MessageResponse>>
 
 public class DeleteBusCommandHandler(
     IBusRepository repository,
-    ICacheService cacheService,
     MethodResultFactory methodResultFactory) 
         : IRequestHandler<DeleteBusCommand, MethodResult<MessageResponse>>
 {
@@ -28,7 +26,6 @@ public class DeleteBusCommandHandler(
 
         await repository.DeleteAsync(bus);
         
-        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.BusesKey, cancellationToken);
         result.Data = new MessageResponse("Bus was deleted successfully");
         
         return result;

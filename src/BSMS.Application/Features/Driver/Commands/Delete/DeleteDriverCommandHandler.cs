@@ -28,8 +28,6 @@ public class DeleteDriverCommandHandler(
 
         await repository.DeleteAsync(driver);
 
-        await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.DriversKey, cancellationToken);
-
         await cacheService.RemoveRecordsByPrefixAsync(CachePrefixConstants.BusesKey, cancellationToken);
 
         result.Data = new MessageResponse("Driver was successfully deleted");
