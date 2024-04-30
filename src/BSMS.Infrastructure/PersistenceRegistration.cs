@@ -18,8 +18,8 @@ public static class PersistenceRegistration
         services.AddDbContext<BusStationContext>(opt =>
         {
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"))
-                .LogTo(Log.Logger.Information, LogLevel.Information)
-                .AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migration
+                .LogTo(Log.Logger.Information, LogLevel.Information);
+                //.AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migration
             
             opt.UseTriggers(configuration => 
             {

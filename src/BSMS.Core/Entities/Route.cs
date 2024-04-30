@@ -11,6 +11,8 @@ public class Route
     [StringLength(50)]
     public string Destination { get; set; } = null!;
 
+    public int OverallDistance { get; set; }
+
     public List<Stop> Stops { get; set; }
     public List<BusScheduleEntry> BusScheduleEntries { get; set; }
 }

@@ -109,5 +109,9 @@ public class BusStationContext : DbContext
                 typeof(BusStationContext).GetMethod(nameof(StopsBelongToSameRoute),
                 [typeof(int), typeof(int)])!)
             .HasName("StopsBelongToSameRoute");
+
+        modelBuilder.Entity<Route>()
+            .Property(r => r.OverallDistance)
+            .HasComputedColumnSql("dbo.CalculateTotalDistanceForRoute([RouteId])");
     }
 }

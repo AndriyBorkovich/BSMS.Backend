@@ -62,7 +62,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                         -- Update the last stop ID
                         SET @LastStopId = @CurrentStopId;
                         -- Get the next stop ID
-                        SET @NextStopId = dbo.FindNextStop(@CurrentStopId, @RouteId);
+                         SET @NextStopId = dbo.FindNextStop(@RouteId, @CurrentStopId);
                         -- Update the current stop ID
                         SET @CurrentStopId = @NextStopId;
                     END;

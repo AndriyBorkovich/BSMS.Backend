@@ -29,6 +29,11 @@ public class GenericRepository<T> : IGenericRepository<T>
         await Context.SaveChangesAsync();
     }
 
+    public async Task BulkInsertAsync(IEnumerable<T> entitites)
+    {
+        await Context.BulkInsertAsync(entitites);
+    }
+
     public async Task UpdateAsync(T entity)
     {
         Context.Entry(entity).State = EntityState.Modified;

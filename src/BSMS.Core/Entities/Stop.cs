@@ -10,6 +10,7 @@ public class Stop
     
     [StringLength(50)]
     public string Name { get; set; }
+    public int? DistanceToPrevious { get; set; }
     
     public Stop? PreviousStop { get; set; }
     public Route Route { get; set; }

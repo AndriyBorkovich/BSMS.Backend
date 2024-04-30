@@ -20,7 +20,7 @@ namespace BSMS.Infrastructure.Persistence.Migrations
 	                DECLARE @IsFree BIT;
 
                     -- check new status
-                    IF @NewStatus = 'Active' OR @NewStatus = 'Canceled' OR @NewStatus = 'Expired'
+                   IF @NewStatus = 'Active' OR @NewStatus = 'Cancelled'
                         SET @IsFree = 1;
                     ELSE
                         SET @IsFree = 0;
