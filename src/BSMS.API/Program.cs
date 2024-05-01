@@ -44,6 +44,7 @@ builder.Services.AddPersistenceServices(builder.Configuration)
                 .AddCustomIdentityServices();
 
 builder.Services.AddHostedService<CacheCleaningJob>();
+builder.Services.AddHostedService<DatabaseSeedJob>(); // comment if you have already filled DB
 
 builder.Services.AddCors(options =>
 {

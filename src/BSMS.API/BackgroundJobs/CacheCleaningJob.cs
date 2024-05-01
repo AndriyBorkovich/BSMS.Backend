@@ -7,6 +7,7 @@ namespace BSMS.API.BackgroundJobs;
 /// Cleans up all previous cache data before app starts
 /// </summary>
 /// <param name="scopeFactory"></param>
+/// <param name="logger"></param>
 public class CacheCleaningJob(
     IServiceScopeFactory scopeFactory,
     ILogger<CacheCleaningJob> logger) : IHostedService

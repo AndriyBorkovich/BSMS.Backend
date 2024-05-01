@@ -3,6 +3,7 @@ using BSMS.Infrastructure.Persistence;
 using BSMS.Infrastructure.Persistence.Interceptors;
 using BSMS.Infrastructure.Persistence.Repositories;
 using BSMS.Infrastructure.Persistence.Triggers;
+using BSMS.Infrastructure.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ public static class PersistenceRegistration
         {
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"))
                 .LogTo(Log.Logger.Information, LogLevel.Information);
-                //.AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migration
+                //.AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migrations and seed
             
             opt.UseTriggers(configuration => 
             {
@@ -34,6 +35,8 @@ public static class PersistenceRegistration
         });
         
         AddRepositories(services);
+
+        services.AddSingleton<IBusStationSeeder, BusStationSeeder>();
 
         return services;
     }
@@ -51,8 +54,6 @@ public static class PersistenceRegistration
         services.AddScoped<ISeatRepository, SeatRepository>();
         services.AddScoped<IStopRepository, StopRepository>();
         services.AddScoped<ITripRepository, TripRepository>();
-        services.AddScoped<ITripStatusRepository, TripStatusRepository>();
-        services.AddScoped<ITicketStatusRepository, TicketStatusRepository>();
         services.AddScoped<ITicketPaymentRepository, TicketPaymentRepository>();
     }
 }
