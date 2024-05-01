@@ -9,10 +9,16 @@ public class Trip
     public int TripId { get; set; }
     public int BusScheduleEntryId { get; set; }
     
-    public DateTime DepartureTime { get; set; }
-    public DateTime ArrivalTime { get; set; }
+    /// <summary>
+    /// actual time when trip has started
+    /// </summary>
+    public DateTime? DepartureTime { get; set; }
+    /// <summary>
+    /// actual time when trip has ended
+    /// </summary>
+    public DateTime? ArrivalTime { get; set; }
+    public TripStatus Status {get; set; }
     
     public BusScheduleEntry BusScheduleEntry { get; set; }
     public List<TicketPayment> BoughtTickets { get; set; }
-    public List<TripStatus> Statuses { get; set; }
 }

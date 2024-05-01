@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using BSMS.Core.Enums;
 
 namespace BSMS.Core.Entities;
 
@@ -12,10 +13,10 @@ public class Ticket
     [Column(TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
     public bool IsSold { get; set; }
+    public TicketStatus Status {get; set; }
 
     public Stop StartStop { get; set; } = null!;
     public Stop EndStop { get; set; } = null!;
     public Seat Seat { get; set; } = null!;
     public TicketPayment Payment { get; set; } = null!;
-    public List<TicketStatus> Statuses { get; set; }
 }

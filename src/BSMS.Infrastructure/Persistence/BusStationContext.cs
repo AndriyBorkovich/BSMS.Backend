@@ -27,8 +27,6 @@ public class BusStationContext : DbContext
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketPayment> TicketPayments { get; set; }
     public DbSet<Trip> Trips { get; set; }
-    public DbSet<TicketStatus> TicketStatuses { get; set; }
-    public DbSet<TripStatus> TripStatuses { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<BusDetailsView> BusesDetailsView { get; set; }
     
@@ -41,8 +39,6 @@ public class BusStationContext : DbContext
         modelBuilder.Entity<Bus>()
             .ToTable(tb => tb.UseSqlOutputClause(false));
         modelBuilder.Entity<Ticket>()
-            .ToTable(tb => tb.UseSqlOutputClause(false));
-        modelBuilder.Entity<TicketStatus>()
             .ToTable(tb => tb.UseSqlOutputClause(false));
         modelBuilder.Entity<Route>()
             .ToTable(tb => tb.UseSqlOutputClause(false));
@@ -80,12 +76,12 @@ public class BusStationContext : DbContext
             .HasConversion<string>()
             .HasMaxLength(20);
 
-        modelBuilder.Entity<TicketStatus>()
+        modelBuilder.Entity<Ticket>()
             .Property(ts => ts.Status)
             .HasConversion<string>()
             .HasMaxLength(20);
         
-        modelBuilder.Entity<TripStatus>()
+        modelBuilder.Entity<Trip>()
             .Property(ts => ts.Status)
             .HasConversion<string>()
             .HasMaxLength(20);
@@ -95,15 +91,6 @@ public class BusStationContext : DbContext
             .WithOne(p => p.Ticket)
             .OnDelete(DeleteBehavior.ClientCascade);
 
-        modelBuilder.Entity<Ticket>()
-            .HasMany(t => t.Statuses)
-            .WithOne(s => s.Ticket)
-            .OnDelete(DeleteBehavior.ClientCascade);
-
-        modelBuilder.Entity<Trip>()
-            .HasMany(t => t.Statuses)
-            .WithOne(s => s.Trip)
-            .OnDelete(DeleteBehavior.ClientCascade);
         
         modelBuilder.HasDbFunction(
                 typeof(BusStationContext).GetMethod(nameof(StopsBelongToSameRoute),
