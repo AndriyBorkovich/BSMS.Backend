@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BSMS.Core.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace BSMS.Core.Entities;
 
+[Index(nameof(Day))]
 public class BusScheduleEntry
 {
     [Key]

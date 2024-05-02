@@ -1,9 +1,11 @@
 ﻿using BSMS.Core.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace BSMS.Core.Entities;
 /// <summary>
 /// represent trip history (live) for specific bus on specific route
 /// </summary>
+[Index(nameof(Status))]
 public class Trip
 {
     public int TripId { get; set; }

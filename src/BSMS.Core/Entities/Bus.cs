@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace BSMS.Core.Entities;
-
+[Index(nameof(Number))]
 public class Bus
 {
     public int BusId { get; set; }

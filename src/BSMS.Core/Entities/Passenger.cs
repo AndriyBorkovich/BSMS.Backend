@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace BSMS.Core.Entities;
-
+[Index(nameof(FirstName))]
+[Index(nameof(LastName))]
 public class Passenger
 {
     public int PassengerId { get; set; }

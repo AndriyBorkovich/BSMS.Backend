@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace BSMS.Core.Entities;
 
+[Index(nameof(FirstName))]
+[Index(nameof(LastName))]
 public class Driver
 {
     public int DriverId { get; set; }
