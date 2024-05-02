@@ -76,7 +76,42 @@ public class BusStationSeeder(IServiceProvider serviceProvider) : IBusStationSee
             return entries;
         });
 
-        context.BusScheduleEntries.AddRange(bogus.Generate());
+        context.BusScheduleEntries.BulkInsert(bogus.Generate(), opt => {
+            opt.BatchSize = 1000;
+            opt.InsertIfNotExists = true;
+        });
+        context.SaveChanges();
+    }
+
+    public void GenerateBusReviews()
+    {
+        var random = new Randomizer();
+        var faker = new Faker();
+
+        using var scope = serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<BusStationContext>();
+
+        var busIds = context.Buses.Select(b => b.BusId).ToList();
+        var passengerIds = context.Passengers.Select(p => p.PassengerId).ToList();
+
+        var reviews = new Faker<BusReview>()
+            .RuleFor(r => r.BusId, f => f.PickRandom(busIds))
+            .RuleFor(r => r.PassengerId, f => f.PickRandom(passengerIds))
+            .RuleFor(r => r.ComfortRating, f => f.Random.Number(1, 5))
+            .RuleFor(r => r.PunctualityRating, f => f.Random.Number(1, 5))
+            .RuleFor(r => r.PriceQualityRatioRating, f => f.Random.Number(1, 5))
+            .RuleFor(r => r.InternetConnectionRating, f => f.Random.Number(1, 5))
+            .RuleFor(r => r.SanitaryConditionsRating, f => f.Random.Number(1, 5))
+            .RuleFor(r => r.Comments, f => f.Random.Words(f.Random.Number(1, 10)))
+            .RuleFor(r => r.ReviewDate, f => f.Date.Recent());
+
+        var busReviews = reviews.Generate(5000);
+
+        context.BusReviews.BulkInsert(busReviews, opt => {
+            opt.InsertIfNotExists = true;
+            opt.BatchSize = 500;
+        });
+
         context.SaveChanges();
     }
 }
