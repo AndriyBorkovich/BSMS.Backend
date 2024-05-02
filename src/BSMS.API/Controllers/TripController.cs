@@ -1,6 +1,7 @@
 ﻿using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Trip.Queries.GetAll;
+using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,7 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc/>
 [ApiController]
 [Route("/api/[controller]")]
-[Authorization]
+[Authorization(Role.Admin, Role.Driver, Role.Passenger)]
 public class TripController(ISender sender) : ControllerBase
 {
     /// <summary>

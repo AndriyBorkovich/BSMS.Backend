@@ -10,7 +10,7 @@ namespace BSMS.API.Controllers;
 /// <inheritdoc />
 [ApiController]
 [Route("api/[controller]")]
-[Authorization(Role.Admin)]
+[Authorization(Role.Admin, Role.Passenger)]
 public class TicketController(ISender sender) : ControllerBase
 {
     /// <summary>

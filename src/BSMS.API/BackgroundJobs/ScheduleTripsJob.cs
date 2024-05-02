@@ -34,7 +34,9 @@ public class ScheduleTripsJob(
         var currentDateTime = DateTime.Now;
         var currentDayOfWeek = currentDateTime.DayOfWeek;
 
-        var isTripsScheduled = await dbContext.Trips.AnyAsync(t => t.DepartureTime.Value.Date == currentDateTime.Date);
+        var isTripsScheduled = await dbContext.Trips
+                                        .AnyAsync(t => t.DepartureTime != null && t.DepartureTime.Value.Date == currentDateTime.Date);
+                                        
         if (!isTripsScheduled)
         {
             // Query for bus schedule entries for the current day of the week

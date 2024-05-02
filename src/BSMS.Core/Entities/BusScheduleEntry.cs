@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace BSMS.Core.Entities;
 
 [Index(nameof(Day))]
+[Index(nameof(DepartureTime))]
+[Index(nameof(ArrivalTime))]
 public class BusScheduleEntry
 {
     [Key]

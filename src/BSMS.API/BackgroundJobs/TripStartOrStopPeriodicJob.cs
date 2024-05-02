@@ -9,8 +9,10 @@ namespace BSMS.API.BackgroundJobs;
 /// Periodic job that handles start or stop of trips based on current time 
 /// </summary>
 /// <param name="serviceProvider"></param>
+/// <param name="logger"></param>
 public class TripStartOrStopPeriodicJob(
-    IServiceProvider serviceProvider) : BackgroundService
+    IServiceProvider serviceProvider,
+    ILogger<TripStartOrStopPeriodicJob> logger) : BackgroundService
 {
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -29,13 +31,14 @@ public class TripStartOrStopPeriodicJob(
 
                 // Query for bus schedule entries where departure time has arrived
                 var tripsToStart = await dbContext.Trips
-                    .Where(t => t.Status != TripStatus.Canceled
+                    .Where(t => t.Status != TripStatus.Canceled && t.Status != TripStatus.Delayed
                         && t.BusScheduleEntry != null
                         && t.BusScheduleEntry.Day == currentDay
                         && t.BusScheduleEntry.DepartureTime.Minute == currentMinute
                         && t.BusScheduleEntry.DepartureTime.Hour == currentHour)
                     .ToListAsync(cancellationToken: stoppingToken);
 
+                var tripsToSetInTransit = new List<Trip>();
                 foreach (var trip in tripsToStart)
                 {
                     if (trip is not null)
@@ -50,12 +53,18 @@ public class TripStartOrStopPeriodicJob(
                             trip.Status = TripStatus.Delayed;
                         }
 
-                        dbContext.Trips.Update(trip);
+                        tripsToSetInTransit.Add(trip);
                     }
                 }
 
+                if (tripsToSetInTransit.Count is not 0)
+                {
+                    await dbContext.BulkUpdateAsync(tripsToSetInTransit);
+                    logger.LogInformation("Some trips has started");
+                }
+
                 // Query for bus schedule entries where arival time has come
-                await dbContext.Trips
+                var updatedRows = await dbContext.Trips
                     .Where(t => t.Status == TripStatus.InTransit
                         && t.BusScheduleEntry != null
                         && t.BusScheduleEntry.Day == currentDay
@@ -65,22 +74,34 @@ public class TripStartOrStopPeriodicJob(
                         t => t.SetProperty(e => e.Status, TripStatus.Completed)
                               .SetProperty(e => e.ArrivalTime, DateTime.Now),
                         cancellationToken: stoppingToken);
+                        
+                if(updatedRows > 0)
+                {
+                    logger.LogInformation("Some trips has completed");
+                }
 
                 // Double check delayed trips, try to start them
 
                 var delayedTrips = await dbContext.Trips
                                         .Where(t => t.Status == TripStatus.Delayed
-                                        && t.DepartureTime.Value.Date == currentTime.Date)
+                                            && t.DepartureTime != null 
+                                            && t.DepartureTime.Value.Date == currentTime.Date)
                                         .ToListAsync(cancellationToken: stoppingToken);
 
+                var tripsToRestart = new List<Trip>();
                 foreach (var trip in delayedTrips)
                 {
                     if (await CanStart(dbContext, trip))
                     {
-                        // Update trip status to "Scheduled" and set departure time to current time
                         trip.Status = TripStatus.Scheduled;
                         trip.DepartureTime = currentTime;
+                        tripsToRestart.Add(trip);
                     }
+                }
+
+                if (tripsToRestart.Count is not 0)
+                {
+                    await dbContext.BulkUpdateAsync(tripsToRestart);
                 }
 
                 await dbContext.SaveChangesAsync(stoppingToken);

@@ -40,8 +40,8 @@ namespace BSMS.Infrastructure.Persistence.Migrations
                 WITH SCHEMABINDING AS
                 select
                     t.TripId,
-                    bse.DepartureTime,
-                    bse.ArrivalTime,
+                    t.DepartureTime,
+                    t.ArrivalTime,
                     r.Origin + ' - ' + r.Destination as RouteName,
                     b.Brand as BusBrand,
                     b.CompanyName,
