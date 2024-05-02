@@ -100,5 +100,9 @@ public class BusStationContext : DbContext
         modelBuilder.Entity<Route>()
             .Property(r => r.OverallDistance)
             .HasComputedColumnSql("dbo.CalculateTotalDistanceForRoute([RouteId])");
+        
+        modelBuilder.Entity<Ticket>()
+            .Property(t => t.Price)
+            .HasComputedColumnSql("dbo.CalculateTicketPrice([EndStopId])");
     }
 }
