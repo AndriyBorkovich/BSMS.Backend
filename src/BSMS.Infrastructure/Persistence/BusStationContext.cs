@@ -29,6 +29,7 @@ public class BusStationContext : DbContext
     public DbSet<Trip> Trips { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<BusDetailsView> BusesDetailsView { get; set; }
+    public DbSet<TripView> TripView { get; set; }
     
     public bool StopsBelongToSameRoute(int stopId1, int stopId2)
         => throw new NotSupportedException();
@@ -104,5 +105,9 @@ public class BusStationContext : DbContext
         modelBuilder.Entity<Ticket>()
             .Property(t => t.Price)
             .HasComputedColumnSql("dbo.CalculateTicketPrice([EndStopId])");
+
+         modelBuilder.Entity<TripView>()
+            .ToView(nameof(TripView))
+            .HasKey(t => t.TripId);
     }
 }

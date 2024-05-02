@@ -32,6 +32,7 @@ public static class PersistenceRegistration
                 configuration.AddTrigger<PassengerChangeTrigger>();
                 configuration.AddTrigger<CompanyChangeTrigger>();
                 configuration.AddTrigger<TripEventsTrigger>();
+                configuration.AddTrigger<TicketStatusChangeTrigger>();
             });
 
             opt.EnableDetailedErrors();
