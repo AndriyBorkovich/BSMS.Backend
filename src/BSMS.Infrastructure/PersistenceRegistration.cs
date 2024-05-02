@@ -16,24 +16,28 @@ public static class PersistenceRegistration
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
     {
+        const int commandTimeoutInSeconds = 120;
         services.AddDbContext<BusStationContext>(opt =>
         {
-            opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"))
-                .LogTo(Log.Logger.Information, LogLevel.Information);
-                //.AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migrations and seed
-            
-            opt.UseTriggers(configuration => 
+            opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"), options =>
+            {
+                options.CommandTimeout(commandTimeoutInSeconds);
+            }).LogTo(Log.Logger.Information, LogLevel.Information);
+            //.AddInterceptors(new ExecuteAsCommandInterceptor()); // turn off when doing migrations and seed
+
+            opt.UseTriggers(configuration =>
             {
                 configuration.AddTrigger<BusChangeTrigger>();
                 configuration.AddTrigger<DriverChangeTrigger>();
                 configuration.AddTrigger<PassengerChangeTrigger>();
                 configuration.AddTrigger<CompanyChangeTrigger>();
+                configuration.AddTrigger<TripEventsTrigger>();
             });
 
             opt.EnableDetailedErrors();
             opt.EnableSensitiveDataLogging();
         });
-        
+
         AddRepositories(services);
 
         services.AddSingleton<IBusStationSeeder, BusStationSeeder>();

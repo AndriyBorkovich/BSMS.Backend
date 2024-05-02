@@ -44,7 +44,9 @@ builder.Services.AddPersistenceServices(builder.Configuration)
                 .AddCustomIdentityServices();
 
 builder.Services.AddHostedService<CacheCleaningJob>();
-builder.Services.AddHostedService<DatabaseSeedJob>(); // comment if you have already filled DB
+// builder.Services.AddHostedService<DatabaseSeedJob>(); // comment if you have already filled DB
+builder.Services.AddHostedService<ScheduleTripsJob>();
+builder.Services.AddHostedService<TripStartOrStopPeriodicJob>();
 
 builder.Services.AddCors(options =>
 {
