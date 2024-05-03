@@ -22,7 +22,7 @@ public class DatabaseSeedJob(
         //var busIds = context.Buses.Select(b => b.BusId).ToList();
         //busIds.ForEach(id => seeder.GenerateScheduleForBuses(id, new Random().Next(2, 5)));
 
-        seeder.GenerateBusReviews();
+        await seeder.GenerateBusReviews();
     }
 
     /// <inheritdoc/>

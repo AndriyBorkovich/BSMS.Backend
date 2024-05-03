@@ -4,7 +4,7 @@ namespace BSMS.Infrastructure.Seed;
 
 public interface IBusStationSeeder
 {
-    void GenerateScheduleForBuses(int busId, int numberOfEntries);
-    void GenerateBusReviews();
+    Task GenerateScheduleForBuses(int busId, int numberOfEntries);
+    Task GenerateBusReviews();
     Task GenerateTicketsAndPaymentsForTrip(int tripId);
 }
