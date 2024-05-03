@@ -104,7 +104,7 @@ public class BusStationContext : DbContext
         
         modelBuilder.Entity<Ticket>()
             .Property(t => t.Price)
-            .HasComputedColumnSql("dbo.CalculateTicketPrice([EndStopId])");
+            .HasComputedColumnSql("dbo.CalculateNewTicketPrice([StartStopId], [EndStopId])");
 
          modelBuilder.Entity<TripView>()
             .ToView(nameof(TripView))

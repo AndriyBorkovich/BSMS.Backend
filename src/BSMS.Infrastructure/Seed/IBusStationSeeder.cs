@@ -6,4 +6,5 @@ public interface IBusStationSeeder
 {
     void GenerateScheduleForBuses(int busId, int numberOfEntries);
     void GenerateBusReviews();
+    Task GenerateTicketsAndPaymentsForTrip(int tripId);
 }

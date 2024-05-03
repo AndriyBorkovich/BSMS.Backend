@@ -17,6 +17,12 @@ public class Passenger
     [StringLength(50)]
     public string? Email { get; set; }
     
+    /// <summary>
+    /// represent left reviews for buses by this passenger
+    /// </summary>
     public List<BusReview> BusReviews { get; set; }
+    /// <summary>
+    /// represent tickets bought by this passenger during all time
+    /// </summary>
     public List<TicketPayment> Payments { get; set; }
 }

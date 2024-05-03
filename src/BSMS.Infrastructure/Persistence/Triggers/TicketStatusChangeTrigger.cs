@@ -22,7 +22,7 @@ public class TicketStatusChangeTrigger(BusStationContext busStationContext) : IA
             }
             else
             {
-                 await busStationContext.Seats.Where(s => s.Tickets.Any(t => t.TicketId == context.Entity.TicketId))
+                await busStationContext.Seats.Where(s => s.Tickets.Any(t => t.TicketId == context.Entity.TicketId))
                 .ExecuteUpdateAsync(
                     s => s.SetProperty(s => s.IsFree, true), cancellationToken: cancellationToken);
             }

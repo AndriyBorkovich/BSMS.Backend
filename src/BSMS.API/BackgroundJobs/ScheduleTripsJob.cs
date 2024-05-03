@@ -1,5 +1,4 @@
-﻿
-using BSMS.Core.Entities;
+﻿using BSMS.Core.Entities;
 using BSMS.Core.Enums;
 using BSMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +35,7 @@ public class ScheduleTripsJob(
 
         var isTripsScheduled = await dbContext.Trips
                                         .AnyAsync(t => t.DepartureTime != null && t.DepartureTime.Value.Date == currentDateTime.Date);
-                                        
+
         if (!isTripsScheduled)
         {
             // Query for bus schedule entries for the current day of the week

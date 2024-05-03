@@ -80,10 +80,11 @@ public class TripStartOrStopPeriodicJob(
                     logger.LogInformation("Some trips has completed");
                 }
 
-                // Double check delayed trips, try to start them
+                // Double check delayed & already scheduled trips which somehow didn't start, try to restart them
 
                 var delayedTrips = await dbContext.Trips
-                                        .Where(t => t.Status == TripStatus.Delayed
+                                        .Where(t => t.Status == TripStatus.Delayed 
+                                            || t.Status == TripStatus.Scheduled
                                             && t.DepartureTime != null 
                                             && t.DepartureTime.Value.Date == currentTime.Date)
                                         .ToListAsync(cancellationToken: stoppingToken);
@@ -93,10 +94,15 @@ public class TripStartOrStopPeriodicJob(
                 {
                     if (await CanStart(dbContext, trip))
                     {
-                        trip.Status = TripStatus.Scheduled;
-                        trip.DepartureTime = currentTime;
-                        tripsToRestart.Add(trip);
+                        trip.Status = TripStatus.InTransit;
+                        trip.DepartureTime = DateTime.Now;
                     }
+                    else
+                    {
+                        trip.Status = TripStatus.Delayed;
+                    }
+
+                    tripsToRestart.Add(trip);
                 }
 
                 if (tripsToRestart.Count is not 0)

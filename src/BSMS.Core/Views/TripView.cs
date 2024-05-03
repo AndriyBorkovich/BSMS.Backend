@@ -8,7 +8,7 @@ public class TripView
     public string RouteName { get; set; }
     public string BusBrand { get; set; }
     public string CompanyName { get; set; }
-    public int BusRating { get; set; }
+    public double BusRating { get; set; }
     public string TripStatus { get; set; }
     public int FreeSeatsCount { get; set; }
 }

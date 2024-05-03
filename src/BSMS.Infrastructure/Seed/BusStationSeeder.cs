@@ -4,10 +4,13 @@ using BSMS.Core.Enums;
 using BSMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace BSMS.Infrastructure.Seed;
 
-public class BusStationSeeder(IServiceProvider serviceProvider) : IBusStationSeeder
+public class BusStationSeeder(
+    IServiceProvider serviceProvider,
+    ILogger<BusStationSeeder> logger) : IBusStationSeeder
 {
     public void GenerateScheduleForBuses(int busId, int entriesForEachDay = 2)
     {
@@ -76,7 +79,8 @@ public class BusStationSeeder(IServiceProvider serviceProvider) : IBusStationSee
             return entries;
         });
 
-        context.BusScheduleEntries.BulkInsert(bogus.Generate(), opt => {
+        context.BusScheduleEntries.BulkInsert(bogus.Generate(), opt =>
+        {
             opt.BatchSize = 1000;
             opt.InsertIfNotExists = true;
         });
@@ -105,13 +109,100 @@ public class BusStationSeeder(IServiceProvider serviceProvider) : IBusStationSee
             .RuleFor(r => r.Comments, f => f.Random.Words(f.Random.Number(1, 10)))
             .RuleFor(r => r.ReviewDate, f => f.Date.Recent());
 
-        var busReviews = reviews.Generate(5000);
+        var busReviews = reviews.Generate(10000);
 
-        context.BusReviews.BulkInsert(busReviews, opt => {
+        context.BusReviews.BulkInsert(busReviews, opt =>
+        {
             opt.InsertIfNotExists = true;
             opt.BatchSize = 500;
         });
 
         context.SaveChanges();
+    }
+
+    public async Task GenerateTicketsAndPaymentsForTrip(int tripId)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BusStationContext>();
+
+        var tripScheduleEntries = dbContext.BusScheduleEntries.Where(be => be.Trips.Any(t => t.TripId == tripId));
+
+        var seatIds = await tripScheduleEntries
+                           .Select(be => be.Bus)
+                           .SelectMany(b => b.Seats)
+                           .Where(s => s.IsFree)
+                           .Select(s => s.SeatId)
+                           .ToListAsync();
+        
+        if (seatIds.Count is not default(int))
+        {
+            var routeStops = tripScheduleEntries.Select(be => be.Route).SelectMany(r => r.Stops);
+
+            var startStop = await routeStops.FirstAsync();
+
+            var ticketsToGenerate = new Random().Next(1, seatIds.Count + 1);
+
+            var passengersIds = dbContext.Passengers.Select(p => p.PassengerId).ToList();
+
+            var tripDepartureTime = dbContext.Trips.First(t => t.TripId == tripId).DepartureTime;
+
+            var availableSeatIds = new HashSet<int>(seatIds);
+
+            var tickets = new Faker<List<Ticket>>().CustomInstantiator(f =>
+            {
+                var ticketsList = new List<Ticket>();
+
+                for (int i = 0; i < ticketsToGenerate; i++)
+                {
+                    var distance = startStop.DistanceToPrevious ?? 0;
+                    var distancesToStart = routeStops
+                        .Where(s => s.StopId != startStop.StopId
+                                && s.DistanceToPrevious >= distance)
+                        .ToDictionary(s => s.StopId, s => s.DistanceToPrevious);
+
+                    // ordered stops based on their distance to the start stop
+                    var orderedStopsIds = distancesToStart.OrderBy(kv => kv.Value).Select(kv => kv.Key).ToList();
+
+                    var endStopId = f.PickRandom(orderedStopsIds);
+
+                    // Pick a random seat that hasn't been chosen yet
+                    var chosenSeatId = f.PickRandom(availableSeatIds.ToList());
+                    availableSeatIds.Remove(chosenSeatId); // Remove the chosen seat from available seats
+
+                    var newTicket = new Ticket
+                    {
+                        SeatId = f.PickRandom(seatIds),
+                        StartStopId = startStop.StopId,
+                        EndStopId = endStopId,
+                        Status = TicketStatus.InUse, // seat availability will be determined by this value in SQL trigger
+                        IsSold = true,
+                        Payment = new TicketPayment
+                        {
+                            PassengerId = f.PickRandom(passengersIds),
+                            TripId = tripId,
+                            PaymentType = f.PickRandom<PaymentType>(),
+                            PaymentDate = f.Date.Between(
+                                tripDepartureTime!.Value.AddHours(new Random().Next(-3, 0)),
+                                tripDepartureTime!.Value)
+                        }
+                    };
+
+                    ticketsList.Add(newTicket);
+                }
+
+                return ticketsList;
+
+            })
+            .Generate();
+
+            dbContext.BulkInsert(tickets, opt => opt.IncludeGraph = true);
+            dbContext.SaveChanges();
+
+            logger.LogInformation("Passengers bought some tickets");
+        }
+        else
+        {
+            logger.LogInformation("Trip have no free tickets to buy");
+        }
     }
 }
