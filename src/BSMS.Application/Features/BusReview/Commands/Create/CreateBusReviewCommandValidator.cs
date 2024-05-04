@@ -18,7 +18,7 @@ public class CreateBusReviewCommandValidator : AbstractValidator<CreateBusReview
         
         RuleFor(c => c.PassengerId)
             .MustAsync(async (id, _) => await _passengerRepository.AnyAsync(p => p.PassengerId == id))
-            .WithMessage("Bus must exist!");
+            .WithMessage("Passenger must exist!");
         
         const int minRating = 1, maxRating = 5;
         

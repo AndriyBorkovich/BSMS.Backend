@@ -16,7 +16,7 @@ public static class PersistenceRegistration
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
     {
-        const int commandTimeoutInSeconds = 120;
+        const int commandTimeoutInSeconds = 150;
         services.AddDbContext<BusStationContext>(opt =>
         {
             opt.UseSqlServer(configuration.GetConnectionString("DefaultLocal"), options =>

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using BSMS.Application.Contracts.Persistence;
 using BSMS.Application.Extensions;
+using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
 using FluentValidation;
 using MapsterMapper;
@@ -13,11 +14,11 @@ public class CreateBusReviewCommandHandler(
         IMapper mapper,
         IValidator<CreateBusReviewCommand> validator,
         MethodResultFactory methodResultFactory)
-    : IRequestHandler<CreateBusReviewCommand, MethodResult<int>>
+    : IRequestHandler<CreateBusReviewCommand, MethodResult<CreatedEntityResponse>>
 {
-    public async Task<MethodResult<int>> Handle(CreateBusReviewCommand request, CancellationToken cancellationToken)
+    public async Task<MethodResult<CreatedEntityResponse>> Handle(CreateBusReviewCommand request, CancellationToken cancellationToken)
     {
-        var result = methodResultFactory.Create<int>();
+        var result = methodResultFactory.Create<CreatedEntityResponse>();
 
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
@@ -29,7 +30,7 @@ public class CreateBusReviewCommandHandler(
 
         await repository.InsertAsync(review);
 
-        result.Data = review.BusReviewId;
+        result.Data = new CreatedEntityResponse(review.BusReviewId);
 
         return result;
     }

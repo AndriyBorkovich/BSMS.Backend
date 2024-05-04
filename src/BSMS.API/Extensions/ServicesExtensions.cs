@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using BSMS.API.BackgroundJobs;
 using BSMS.Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -19,7 +20,7 @@ internal static class ServicesExtensions
             }
         );
     }
-    
+
     /// <summary>
     /// Configure Swagger OpenAPI 
     /// </summary>
@@ -82,5 +83,18 @@ internal static class ServicesExtensions
                 ValidIssuer = jwtSettings.Issuer
             };
         });
+    }
+
+    /// <summary>
+    /// Add one-time running and recurring jobs
+    /// </summary>
+    /// <param name="services"></param>
+    public static void AddHostedServices(this IServiceCollection services)
+    {
+        services.AddHostedService<CacheCleaningJob>();
+        //services.AddHostedService<DatabaseSeedJob>(); // comment if you have already filled DB
+        services.AddHostedService<ScheduleTripsJob>();
+        services.AddHostedService<TripStartOrStopPeriodicJob>();
+        services.AddHostedService<TicketGenerationJob>();
     }
 }

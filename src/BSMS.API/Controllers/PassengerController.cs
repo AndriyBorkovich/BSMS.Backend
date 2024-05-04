@@ -5,6 +5,7 @@ using BSMS.Application.Features.Passenger.Commands.Create;
 using BSMS.Application.Features.Passenger.Commands.Delete;
 using BSMS.Application.Features.Passenger.Commands.Edit;
 using BSMS.Application.Features.Passenger.Queries.GetAll;
+using BSMS.Application.Features.Passenger.Queries.GetAllShortInfo;
 using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,20 @@ public class PassengerController(ISender sender) : ControllerBase
     [HttpGet("GetAll")]
     public async Task<ActionResult<ListResponse<GetAllPassengersResponse>>> GetAll(
         [FromQuery] GetAllPassengersQuery query)
+    {
+        var result = await sender.Send(query);
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get passenger full names
+    /// </summary>
+    /// <param name="query">Contains optional bus query ID parameter which will help to get bus-related passengers</param>
+    /// <returns>List containing passengers' IDs and fullnames</returns>
+    [HttpGet("GetAllShortInfo")]
+    public async Task<ActionResult<List<GetAllPassengersShortInfoResponse>>> GetAllShortInfo(
+        [FromQuery] GetAllPassengersShortInfoQuery query) 
     {
         var result = await sender.Send(query);
 

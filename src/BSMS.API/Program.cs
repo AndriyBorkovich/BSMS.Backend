@@ -6,7 +6,6 @@ using BSMS.API.Middlewares;
 using BSMS.Infrastructure.Authorization;
 using Serilog;
 using Microsoft.AspNetCore.HttpLogging;
-using BSMS.API.BackgroundJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,11 +42,7 @@ builder.Services.AddPersistenceServices(builder.Configuration)
                 .AddApplicationServices()
                 .AddCustomIdentityServices();
 
-builder.Services.AddHostedService<CacheCleaningJob>();
-//builder.Services.AddHostedService<DatabaseSeedJob>(); // comment if you have already filled DB
-builder.Services.AddHostedService<ScheduleTripsJob>();
-builder.Services.AddHostedService<TripStartOrStopPeriodicJob>();
-builder.Services.AddHostedService<TicketGenerationJob>();
+builder.Services.AddHostedServices();
 
 builder.Services.AddCors(options =>
 {

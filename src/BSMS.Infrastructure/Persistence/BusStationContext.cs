@@ -91,11 +91,12 @@ public class BusStationContext : DbContext
             .HasOne(t => t.Payment)
             .WithOne(p => p.Ticket)
             .OnDelete(DeleteBehavior.ClientCascade);
-
         
         modelBuilder.HasDbFunction(
-                typeof(BusStationContext).GetMethod(nameof(StopsBelongToSameRoute),
-                [typeof(int), typeof(int)])!)
+                typeof(BusStationContext)
+                .GetMethod(
+                    nameof(StopsBelongToSameRoute),
+                    [typeof(int), typeof(int)])!)
             .HasName("StopsBelongToSameRoute");
 
         modelBuilder.Entity<Route>()
