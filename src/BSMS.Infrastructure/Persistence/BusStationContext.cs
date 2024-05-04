@@ -110,5 +110,13 @@ public class BusStationContext : DbContext
          modelBuilder.Entity<TripView>()
             .ToView(nameof(TripView))
             .HasKey(t => t.TripId);
+
+        modelBuilder.Entity<PaymentsView>()
+            .ToView(nameof(PaymentsView))
+            .Property(p => p.PaymentType)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<PaymentsView>()
+            .HasKey(p => p.TicketPaymentId);
     }
 }
