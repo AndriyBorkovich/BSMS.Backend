@@ -58,7 +58,7 @@ public class TripStartOrStopPeriodicJob(
 
         // Query for bus schedule entries where departure time has arrived
         var tripCandidatesToStart = await dbContext.Trips
-            .Where(t => t.Status != TripStatus.Canceled && t.Status != TripStatus.Delayed
+            .Where(t => t.Status != TripStatus.Cancelled && t.Status != TripStatus.Delayed
                 && t.BusScheduleEntry != null
                 && t.BusScheduleEntry.Day == currentDay
                 && t.BusScheduleEntry.DepartureTime.Minute == currentMinute
@@ -89,7 +89,7 @@ public class TripStartOrStopPeriodicJob(
 
         if (tripsToSetInTransit.Count is not 0)
         {
-            await dbContext.BulkUpdateAsync(tripsToSetInTransit);
+            await dbContext.BulkUpdateAsync(tripsToSetInTransit, opt => opt.IncludeGraph = true, stoppingToken);
             logger.LogInformation("{0} trips has started", tripsToSetInTransit.Count);
         }
     }
@@ -140,7 +140,7 @@ public class TripStartOrStopPeriodicJob(
                 if (availabilityEntry != null && availabilityEntry.CanStartTrip())
                 {
                     trip.Status = TripStatus.InTransit;
-                    // restart with new 
+                    // restart with new dates
                     var diff = trip.ArrivalTime - trip.DepartureTime;
                     trip.DepartureTime = DateTime.Now;
                     trip.ArrivalTime = trip.DepartureTime + diff;
@@ -156,7 +156,7 @@ public class TripStartOrStopPeriodicJob(
 
         if (tripsToRestart.Count is not 0)
         {
-            await dbContext.BulkUpdateAsync(tripsToRestart, stoppingToken);
+            await dbContext.BulkUpdateAsync(tripsToRestart, opt => opt.IncludeGraph = true,  stoppingToken);
         }
     }
 

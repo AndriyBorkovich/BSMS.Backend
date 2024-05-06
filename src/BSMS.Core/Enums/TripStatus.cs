@@ -5,6 +5,6 @@ public enum TripStatus
     Scheduled = 100,
     InTransit = 200,
     Delayed = 300,
-    Canceled = 400,
+    Cancelled = 400,
     Completed = 500
 }

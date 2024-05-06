@@ -32,7 +32,7 @@ public class TicketGenerationJob(
         var currentDate = DateTime.Now.Date;
 
         var tripsIds = await dbContext.Trips
-            .Where(t => t.Status != TripStatus.Canceled
+            .Where(t => t.Status != TripStatus.Cancelled
                     && t.Status != TripStatus.Completed
                     && t.DepartureTime != null 
                     && t.DepartureTime.Value.Date == currentDate)

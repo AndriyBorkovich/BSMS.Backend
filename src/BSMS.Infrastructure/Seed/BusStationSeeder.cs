@@ -150,7 +150,7 @@ public class BusStationSeeder(
 
             var f = new Faker();
 
-            var tickets = new ConcurrentBag<Ticket>();
+            var tickets = new List<Ticket>();
 
             for (int i = 0; i < ticketsToGenerate; i++)
             {

@@ -34,7 +34,7 @@ public class ScheduleTripsJob(
         var currentDayOfWeek = currentDateTime.DayOfWeek;
 
         var isTripsScheduled = await dbContext.Trips
-                                        .AnyAsync(t => t.DepartureTime != null && t.DepartureTime.Value.Date == currentDateTime.Date);
+                                    .AnyAsync(t => t.DepartureTime != null && t.DepartureTime.Value.Date == currentDateTime.Date);
 
         if (!isTripsScheduled)
         {

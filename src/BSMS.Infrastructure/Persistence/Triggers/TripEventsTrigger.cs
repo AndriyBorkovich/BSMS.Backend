@@ -30,7 +30,7 @@ public class TripEventsTrigger(BusStationContext busStationContext) : IAfterSave
                         cancellationToken: cancellationToken);
             }
 
-            if (context.Entity.Status == TripStatus.Canceled)
+            if (context.Entity.Status == TripStatus.Cancelled)
             {
                 await busStationContext.Tickets
                     .Where(t => t.Payment.TripId == context.Entity.TripId)
@@ -38,8 +38,6 @@ public class TripEventsTrigger(BusStationContext busStationContext) : IAfterSave
                         s => s.SetProperty(t => t.Status, TicketStatus.Cancelled), 
                         cancellationToken: cancellationToken);
             }
-
-            await busStationContext.SaveChangesAsync(cancellationToken);
         }
     }
 }
