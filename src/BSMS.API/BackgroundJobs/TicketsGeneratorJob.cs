@@ -17,10 +17,11 @@ public class TicketGenerationJob(
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        const int offset = 30;
         while (!stoppingToken.IsCancellationRequested)
         {
             await GenerateTickets(stoppingToken);
-            await Task.Delay(TimeSpan.FromSeconds(45), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(offset), stoppingToken);
         }
     }
 

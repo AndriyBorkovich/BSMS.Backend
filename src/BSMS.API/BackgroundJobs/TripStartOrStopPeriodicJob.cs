@@ -27,7 +27,7 @@ public class TripStartOrStopPeriodicJob(
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        const int offset = 60;
+        const int offset = 40;
         while (!stoppingToken.IsCancellationRequested)
         {
             await HandleTripsAsync(stoppingToken);
@@ -63,14 +63,14 @@ public class TripStartOrStopPeriodicJob(
                 && t.BusScheduleEntry.DepartureTime.Hour == currentHour)
             .ToListAsync(cancellationToken: stoppingToken);
 
-        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, currentDateTime, stoppingToken);
+        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, tripCandidatesToStart.Select(t => t.TripId), currentDateTime, stoppingToken);
 
         var tripsToSetInTransit = new List<Trip>();
         foreach (var trip in tripCandidatesToStart)
         {
             if (trip is not null)
             {
-                var availabilityEntry = seatAvailabilityData.Find(d => d.TripId == trip.TripId);
+                var availabilityEntry = seatAvailabilityData.FirstOrDefault(d => d.TripId == trip.TripId);
                 if (availabilityEntry != null && availabilityEntry.CanStartTrip())
                 {
                     trip.Status = TripStatus.InTransit;
@@ -128,14 +128,14 @@ public class TripStartOrStopPeriodicJob(
                                     && t.DepartureTime.Value.Date == currentTime.Date)
                                 .ToListAsync(stoppingToken);
 
-        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, currentTime, stoppingToken);
+        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, delayedTrips.Select(t => t.TripId), currentTime, stoppingToken);
 
         var tripsToRestart = new List<Trip>();
         foreach (var trip in delayedTrips)
         {
             if (trip is not null)
             {
-                var availabilityEntry = seatAvailabilityData.Find(d => d.TripId == trip.TripId);
+                var availabilityEntry = seatAvailabilityData.FirstOrDefault(d => d.TripId == trip.TripId);
                 if (availabilityEntry != null && availabilityEntry.CanStartTrip())
                 {
                     trip.Status = TripStatus.InTransit;
@@ -162,15 +162,15 @@ public class TripStartOrStopPeriodicJob(
     }
 
     private async Task<List<TripsAvailabilityData>> GetTripsReadyToTransitDataAsync(
-        BusStationContext dbContext, DateTime todayDateTime, CancellationToken cancellationToken)
+        BusStationContext dbContext, IEnumerable<int> tripIds, DateTime todayDateTime, CancellationToken cancellationToken)
     {
         return await dbContext.Trips.AsNoTracking()
-            .Where(t => t.DepartureTime != null && t.DepartureTime.Value.Date == todayDateTime.Date)
+            .Where(t => tripIds.Contains(t.TripId))
             .Select(t => new TripsAvailabilityData
             {
                 TripId = t.TripId,
                 BusCapaity = t.BusScheduleEntry.Bus.Capacity,
-                BoughtTicketsCount = t.BoughtTickets.Count()
+                BoughtTicketsCount = t.BoughtTickets.Capacity != 0 ? t.BoughtTickets.Count : 0
             })
             .ToListAsync(cancellationToken: cancellationToken);
     }
