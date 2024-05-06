@@ -128,7 +128,7 @@ public class BusStationSeeder(
         var tripScheduleEntries = dbContext.BusScheduleEntries.Where(be => be.Trips.Any(t => t.TripId == tripId));
 
         var seatIds = await tripScheduleEntries
-                           .Select(be => be.Bus)
+                           .Select(e => e.Bus)
                            .SelectMany(b => b.Seats)
                            .Where(s => s.IsFree)
                            .Select(s => s.SeatId)
@@ -164,9 +164,9 @@ public class BusStationSeeder(
 
                 var endStopId = f.PickRandom(orderedStopsIds);
 
-                // Pick a random seat that hasn't been chosen yet and remove the chosen seat from available seats
-                var chosenSeatId = f.PickRandom(availableSeatIds.ToList());
-                availableSeatIds.Remove(chosenSeatId);
+                // Pick a random seat that hasn't been choosen yet and remove the choosen seat from available seats
+                var choosenSeatId = f.PickRandom(availableSeatIds.ToList());
+                availableSeatIds.Remove(choosenSeatId);
 
                 var newTicket = new Ticket
                 {
@@ -191,7 +191,7 @@ public class BusStationSeeder(
 
             await dbContext.BulkInsertOptimizedAsync(tickets, opt => opt.IncludeGraph = true);
 
-            logger.LogInformation("Passengers bought {0} tickets", ticketsToGenerate);
+            logger.LogInformation("Passengers have bought {0} tickets", ticketsToGenerate);
         }
         else
         {

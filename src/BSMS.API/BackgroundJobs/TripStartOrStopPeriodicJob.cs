@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using Bogus;
-using BSMS.Core.Entities;
+﻿using BSMS.Core.Entities;
 using BSMS.Core.Enums;
 using BSMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -90,7 +88,8 @@ public class TripStartOrStopPeriodicJob(
         if (tripsToSetInTransit.Count is not 0)
         {
             await dbContext.BulkUpdateAsync(tripsToSetInTransit, opt => opt.IncludeGraph = true, stoppingToken);
-            logger.LogInformation("{0} trips has started", tripsToSetInTransit.Count);
+            logger.LogInformation("{0} trips have started", tripsToSetInTransit.Count(t => t.Status == TripStatus.InTransit));
+             logger.LogInformation("{0} trips have been delayed", tripsToSetInTransit.Count(t => t.Status == TripStatus.Delayed));
         }
     }
 
@@ -115,7 +114,7 @@ public class TripStartOrStopPeriodicJob(
 
         if (updatedRows > 0)
         {
-            logger.LogInformation("{0} trips has completed", updatedRows);
+            logger.LogInformation("{0} trips have completed", updatedRows);
         }
     }
 
@@ -157,6 +156,8 @@ public class TripStartOrStopPeriodicJob(
         if (tripsToRestart.Count is not 0)
         {
             await dbContext.BulkUpdateAsync(tripsToRestart, opt => opt.IncludeGraph = true,  stoppingToken);
+            logger.LogInformation("{0} trips have been restarted", tripsToRestart.Count(t => t.Status == TripStatus.InTransit));
+            logger.LogInformation("{0} trips are still delaying", tripsToRestart.Count(t => t.Status == TripStatus.Delayed));
         }
     }
 

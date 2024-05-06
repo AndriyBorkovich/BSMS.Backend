@@ -8,6 +8,7 @@ namespace BSMS.API.BackgroundJobs;
 /// Schedule new trips based on current date
 /// </summary>
 /// <param name="serviceProvider"></param>
+/// <param name="logger"></param>
 public class ScheduleTripsJob(
     IServiceProvider serviceProvider,
     ILogger<ScheduleTripsJob> logger) : IHostedService
