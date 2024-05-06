@@ -124,6 +124,7 @@ public class TripStartOrStopPeriodicJob(
         var delayedTrips = await dbContext.Trips
                                 .Where(t => t.Status == TripStatus.Delayed
                                     || t.Status == TripStatus.Scheduled
+                                    || t.Status == TripStatus.InTransit
                                     && t.DepartureTime != null
                                     && t.DepartureTime.Value.Date == currentTime.Date)
                                 .ToListAsync(stoppingToken);
