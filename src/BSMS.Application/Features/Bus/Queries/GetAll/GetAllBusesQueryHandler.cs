@@ -15,6 +15,7 @@ namespace BSMS.Application.Features.Bus.Queries.GetAll;
 public record GetAllBusesQuery(
     string? SearchedBrand,
     string? SearchedBusNumber,
+    bool? HaveBoughtTickets,
     Pagination Pagination) : IRequest<MethodResult<ListResponse<GetAllBusesResponse>>>;
 
 public record GetAllBusesResponse(
@@ -57,7 +58,7 @@ public class GetAllBusesQueryHandler(
 
         var query = repository.GetBusesDetails().AsNoTracking();
 
-        var filters = SetUpFilters(request);
+        var filters = await SetUpFilters(request);
 
         var (busesList, total) = await query.Where(filters)
                                             .ProjectToType<GetAllBusesResponse>()
@@ -83,7 +84,7 @@ public class GetAllBusesQueryHandler(
         return $"{CachePrefixConstants.BusesKey}({from}-{to})_{request.SearchedBrand}_{request.SearchedBusNumber}";
     }
 
-    private static ExpressionStarter<BusDetailsView> SetUpFilters(GetAllBusesQuery request)
+    private async Task<ExpressionStarter<BusDetailsView>> SetUpFilters(GetAllBusesQuery request)
     {
         var filters = PredicateBuilder.New<BusDetailsView>(true);
         if (!string.IsNullOrWhiteSpace(request.SearchedBrand))
@@ -94,6 +95,17 @@ public class GetAllBusesQueryHandler(
         if (!string.IsNullOrWhiteSpace(request.SearchedBusNumber))
         {
             filters = filters.And(b => b.Number.StartsWith(request.SearchedBusNumber));
+        }
+
+        if (request.HaveBoughtTickets is not null and true)
+        {
+            var busIdsWithBoughtTickets = await repository.GetAll()
+                        .AsNoTracking()
+                        .Where(b => b.BusScheduleEntries.Any(bs => bs.Trips.Any(t => t.BoughtTickets.Count != 0)))
+                        .Select(b => b.BusId)
+                        .ToListAsync();
+
+            filters = filters.And(b => busIdsWithBoughtTickets.Contains(b.BusId));
         }
 
         return filters;
