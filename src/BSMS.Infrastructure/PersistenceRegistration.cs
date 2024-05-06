@@ -31,8 +31,6 @@ public static class PersistenceRegistration
                 configuration.AddTrigger<DriverChangeTrigger>();
                 configuration.AddTrigger<PassengerChangeTrigger>();
                 configuration.AddTrigger<CompanyChangeTrigger>();
-                configuration.AddTrigger<TripEventsTrigger>();
-                configuration.AddTrigger<TicketStatusChangeTrigger>();
             });
 
             opt.EnableDetailedErrors();
