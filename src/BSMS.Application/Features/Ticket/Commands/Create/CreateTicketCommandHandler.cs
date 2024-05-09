@@ -4,8 +4,8 @@ using BSMS.Application.Extensions;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Helpers;
 using BSMS.Core.Entities;
+using BSMS.Core.Enums;
 using FluentValidation;
-using MapsterMapper;
 using MediatR;
 
 namespace BSMS.Application.Features.Ticket.Commands.Create;
@@ -14,12 +14,13 @@ public record CreateTicketCommand(
     int SeatId,
     int StartStopId,
     int EndStopId,
-    decimal Price) : IRequest<MethodResult<CreatedEntityResponse>>;
+    int TripId,
+    int PassengerId,
+    PaymentType PaymentType) : IRequest<MethodResult<CreatedEntityResponse>>;
 
 public class CreateTicketCommandHandler(
     ITicketRepository repository,
     IValidator<CreateTicketCommand> validator,
-    IMapper mapper,
     MethodResultFactory methodResultFactory) 
         : IRequestHandler<CreateTicketCommand, MethodResult<CreatedEntityResponse>>
 {
@@ -35,7 +36,22 @@ public class CreateTicketCommandHandler(
             return result;
         }
 
-        var ticket = mapper.Map<Core.Entities.Ticket>(request);
+        var ticket = new Core.Entities.Ticket
+        {
+            SeatId = request.SeatId,
+            StartStopId = request.StartStopId,
+            EndStopId = request.EndStopId,
+            IsSold = true,
+            Status = TicketStatus.InUse,
+            Payment = new TicketPayment
+            {
+                TripId = request.TripId,
+                PassengerId = request.PassengerId,
+                PaymentDate = DateTime.Now,
+                PaymentType = request.PaymentType
+            }
+        };
+        
         await repository.InsertAsync(ticket);
 
         result.Data = new CreatedEntityResponse(ticket.TicketId);

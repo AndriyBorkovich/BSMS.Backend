@@ -1,4 +1,5 @@
-﻿using BSMS.Application.Contracts.Persistence;
+﻿using System.Data;
+using BSMS.Application.Contracts.Persistence;
 using FluentValidation;
 
 namespace BSMS.Application.Features.Ticket.Commands.Create;
@@ -7,11 +8,27 @@ public class CreateTicketCommandValidator : AbstractValidator<CreateTicketComman
 {
     private readonly ISeatRepository _seatRepository;
     private readonly IStopRepository _stopRepository;
+    private readonly ITripRepository _tripRepository;
+    private readonly IPassengerRepository _passengerRepository;
     
-    public CreateTicketCommandValidator(ISeatRepository seatRepository, IStopRepository stopRepository)
+    public CreateTicketCommandValidator(
+        ISeatRepository seatRepository, 
+        IStopRepository stopRepository,
+        ITripRepository tripRepository,
+        IPassengerRepository passengerRepository)
     {
         _seatRepository = seatRepository;
         _stopRepository = stopRepository;
+        _tripRepository = tripRepository;
+        _passengerRepository = passengerRepository;
+
+        RuleFor(c => c.TripId)
+            .MustAsync(async (id, _) => await _tripRepository.AnyAsync(t => t.TripId == id))
+            .WithMessage("Trip must exist!");
+
+        RuleFor(c => c.PassengerId)
+            .MustAsync((id, _) => _passengerRepository.AnyAsync(p => p.PassengerId == id))
+            .WithMessage("Passenger must exist!");
 
         RuleFor(c => c.StartStopId)
             .MustAsync(async (id, _) => await _stopRepository.AnyAsync(s => s.StopId == id))

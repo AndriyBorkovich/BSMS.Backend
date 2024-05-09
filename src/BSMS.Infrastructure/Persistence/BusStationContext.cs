@@ -30,7 +30,8 @@ public class BusStationContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<BusDetailsView> BusesDetailsView { get; set; }
     public DbSet<TripView> TripView { get; set; }
-    
+    public DbSet<PaymentsView> PaymentsView { get; set; }
+
     public bool StopsBelongToSameRoute(int stopId1, int stopId2)
         => throw new NotSupportedException();
 
@@ -45,12 +46,12 @@ public class BusStationContext : DbContext
             .ToTable(tb => tb.UseSqlOutputClause(false));
         modelBuilder.Entity<Stop>()
             .ToTable(tb => tb.UseSqlOutputClause(false));
-        
+
         modelBuilder.Entity<Stop>()
             .HasMany(s => s.TicketStartStops)
             .WithOne(t => t.StartStop)
             .OnDelete(DeleteBehavior.ClientSetNull);
-        
+
         modelBuilder.Entity<Stop>()
             .HasMany(s => s.TicketEndStops)
             .WithOne(t => t.EndStop)
@@ -61,7 +62,7 @@ public class BusStationContext : DbContext
             .Property(bs => bs.Day)
             .HasConversion<string>()
             .HasMaxLength(20);
-        
+
         modelBuilder
             .Entity<BusScheduleEntry>()
             .Property(bs => bs.MoveDirection)
@@ -81,7 +82,7 @@ public class BusStationContext : DbContext
             .Property(ts => ts.Status)
             .HasConversion<string>()
             .HasMaxLength(20);
-        
+
         modelBuilder.Entity<Trip>()
             .Property(ts => ts.Status)
             .HasConversion<string>()
@@ -91,7 +92,7 @@ public class BusStationContext : DbContext
             .HasOne(t => t.Payment)
             .WithOne(p => p.Ticket)
             .OnDelete(DeleteBehavior.ClientCascade);
-        
+
         modelBuilder.HasDbFunction(
                 typeof(BusStationContext)
                 .GetMethod(
@@ -102,21 +103,17 @@ public class BusStationContext : DbContext
         modelBuilder.Entity<Route>()
             .Property(r => r.OverallDistance)
             .HasComputedColumnSql("dbo.CalculateTotalDistanceForRoute([RouteId])");
-        
+
         modelBuilder.Entity<Ticket>()
             .Property(t => t.Price)
             .HasComputedColumnSql("dbo.CalculateNewTicketPrice([StartStopId], [EndStopId])");
 
-         modelBuilder.Entity<TripView>()
-            .ToView(nameof(TripView))
-            .HasKey(t => t.TripId);
+        modelBuilder.Entity<TripView>()
+           .ToView(nameof(TripView))
+           .HasKey(t => t.TripId);
 
         modelBuilder.Entity<PaymentsView>()
             .ToView(nameof(PaymentsView))
-            .Property(p => p.PaymentType)
-            .HasConversion<string>();
-
-        modelBuilder.Entity<PaymentsView>()
             .HasKey(p => p.TicketPaymentId);
     }
 }

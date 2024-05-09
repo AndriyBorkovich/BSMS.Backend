@@ -11,4 +11,5 @@ public class TripView
     public double BusRating { get; set; }
     public string TripStatus { get; set; }
     public int FreeSeatsCount { get; set; }
+    public int Capacity { get; set; }
 }

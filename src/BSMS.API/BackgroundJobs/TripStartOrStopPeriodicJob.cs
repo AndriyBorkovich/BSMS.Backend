@@ -51,19 +51,19 @@ public class TripStartOrStopPeriodicJob(
         BusStationContext dbContext, DateTime currentDateTime, CancellationToken stoppingToken)
     {
         var currentHour = currentDateTime.Hour;
-        var currentMinute = currentDateTime.Minute;
+        var currentMinute = currentDateTime.AddMinutes(-1).Minute;
         var currentDay = currentDateTime.DayOfWeek;
 
         // Query for bus schedule entries where departure time has arrived
         var tripCandidatesToStart = await dbContext.Trips
-            .Where(t => t.Status != TripStatus.Cancelled && t.Status != TripStatus.Delayed
+            .Where(t => t.Status == TripStatus.Scheduled
                 && t.BusScheduleEntry != null
                 && t.BusScheduleEntry.Day == currentDay
-                && t.BusScheduleEntry.DepartureTime.Minute == currentMinute
-                && t.BusScheduleEntry.DepartureTime.Hour == currentHour)
+                && t.BusScheduleEntry.DepartureTime.Minute <= currentMinute
+                && t.BusScheduleEntry.DepartureTime.Hour <= currentHour)
             .ToListAsync(cancellationToken: stoppingToken);
 
-        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, tripCandidatesToStart.Select(t => t.TripId), currentDateTime, stoppingToken);
+        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, tripCandidatesToStart.Select(t => t.TripId), stoppingToken);
 
         var tripsToSetInTransit = new List<Trip>();
         foreach (var trip in tripCandidatesToStart)
@@ -97,7 +97,7 @@ public class TripStartOrStopPeriodicJob(
        BusStationContext dbContext, DateTime currentDateTime, CancellationToken stoppingToken)
     {
         var currentHour = currentDateTime.Hour;
-        var currentMinute = currentDateTime.Minute;
+        var currentMinute = currentDateTime.AddMinutes(-1).Minute;
         var currentDay = currentDateTime.DayOfWeek;
 
         // Query for bus schedule entries where arival time has come
@@ -122,14 +122,16 @@ public class TripStartOrStopPeriodicJob(
     {
         // Double check delayed & already scheduled trips which somehow didn't start, try to restart them
         var delayedTrips = await dbContext.Trips
-                                .Where(t => t.Status == TripStatus.Delayed
+                                .Where(t => t.DepartureTime != null
+                                    && t.DepartureTime.Value.Date == currentTime.Date
+                                    && (t.Status == TripStatus.Delayed
                                     || t.Status == TripStatus.Scheduled
-                                    || t.Status == TripStatus.InTransit
-                                    && t.DepartureTime != null
-                                    && t.DepartureTime.Value.Date == currentTime.Date)
+                                    || t.Status == TripStatus.InTransit)
+                                    && t.DepartureTime.Value.Hour <= currentTime.Hour
+                                    && t.DepartureTime.Value.Minute <= currentTime.Minute)
                                 .ToListAsync(stoppingToken);
 
-        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, delayedTrips.Select(t => t.TripId), currentTime, stoppingToken);
+        var seatAvailabilityData = await GetTripsReadyToTransitDataAsync(dbContext, delayedTrips.Select(t => t.TripId), stoppingToken);
 
         var tripsToRestart = new List<Trip>();
         foreach (var trip in delayedTrips)
@@ -163,7 +165,7 @@ public class TripStartOrStopPeriodicJob(
     }
 
     private async Task<List<TripsAvailabilityData>> GetTripsReadyToTransitDataAsync(
-        BusStationContext dbContext, IEnumerable<int> tripIds, DateTime todayDateTime, CancellationToken cancellationToken)
+        BusStationContext dbContext, IEnumerable<int> tripIds, CancellationToken cancellationToken)
     {
         return await dbContext.Trips.AsNoTracking()
             .Where(t => tripIds.Contains(t.TripId))
@@ -171,7 +173,7 @@ public class TripStartOrStopPeriodicJob(
             {
                 TripId = t.TripId,
                 BusCapaity = t.BusScheduleEntry.Bus.Capacity,
-                BoughtTicketsCount = t.BoughtTickets.Capacity != 0 ? t.BoughtTickets.Count : 0
+                BoughtTicketsCount = t.BoughtTickets.Count
             })
             .ToListAsync(cancellationToken: cancellationToken);
     }

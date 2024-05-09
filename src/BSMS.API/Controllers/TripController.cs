@@ -3,6 +3,7 @@ using BSMS.API.Filters;
 using BSMS.Application.Features.Common;
 using BSMS.Application.Features.Trip.Queries.GetAll;
 using BSMS.Application.Features.Trip.Queries.GetAllStops;
+using BSMS.Application.Features.Trip.Queries.GetFreeSeats;
 using BSMS.Core.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -35,8 +36,21 @@ public class TripController(ISender sender) : ControllerBase
     /// <returns>List of stop IDs and names</returns>
     [HttpGet("GetAllStops")]
     public async Task<ActionResult<List<GetAllRouteStopsResponse>>> GetAllStops(
-        [FromQuery] GetAllRouteStopsQuery query
-    )
+        [FromQuery] GetAllRouteStopsQuery query)
+    {
+        var result = await sender.Send(query);
+
+        return result.DecideWhatToReturn();
+    }
+
+    /// <summary>
+    /// Get free seats in bus for choosen trip at current time
+    /// </summary>
+    /// <param name="query">Contains trip ID</param>
+    /// <returns>List of seat IDs and their numbers</returns>
+    [HttpGet("GetFreeSeats")]
+    public async Task<ActionResult<List<GetFreeSeatsForTripResponse>>> GetFreeSeats(
+        [FromQuery] GetFreeSeatsForTripQuery query)
     {
         var result = await sender.Send(query);
 
