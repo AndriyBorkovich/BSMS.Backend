@@ -6,6 +6,7 @@ using BSMS.API.Middlewares;
 using BSMS.Infrastructure.Authorization;
 using Serilog;
 using Microsoft.AspNetCore.HttpLogging;
+using BSMS.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,8 @@ builder.Services.AddCors(options =>
         policyConfig => policyConfig.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.UseCors("All");
@@ -78,5 +81,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ViewHub>("/hubs/view");
 
 app.Run();
